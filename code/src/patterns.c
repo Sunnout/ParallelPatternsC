@@ -1,5 +1,6 @@
 #include <string.h>
 #include <assert.h>
+#include <omp.h>
 #include "patterns.h"
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
