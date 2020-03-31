@@ -15,6 +15,7 @@ This README would normally document whatever steps are necessary to get your app
 ```
 git clone https://github.com/AndreOA/cp2019-20_project_50095_51910.git
 cd cp2019-20_project_50095_51910
+cd code
 make
 ```
 * How to run tests
