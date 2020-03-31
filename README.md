@@ -13,15 +13,12 @@ This README would normally document whatever steps are necessary to get your app
 * Summary of set up
 
 ```
-git clone https://bitbucket.org/joaomlourenco/parallel_patterns_seq.git
-cd parallel_patterns_seq
+git clone https://github.com/AndreOA/cp2019-20_project_50095_51910.git
+cd cp2019-20_project_50095_51910
 make
 ```
 * How to run tests
     * Example: `./main 1000000`
     * Example with debug: `./main -d 10`
 
-### Who do I talk to? ###
 
-* Repo owner or admin
-João Lourenço <joao.lourenco@fct.unl.pt>
