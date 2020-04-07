@@ -79,8 +79,10 @@ void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filt
     }
 }
 
+/**
+ * WARNING - This implementation of scatter is non deterministic when the filter array contains repeatead elements
+ **/
 void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
-    /* To be implemented */
     assert (dest != NULL);
     assert (src != NULL);
     assert (filter != NULL);
@@ -88,6 +90,8 @@ void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *fil
     assert (sizeJob > 0);
     char *d = dest;
     char *s = src;
+
+    #pragma omp parallel for
     for (int i=0; i < nJob; i++) {
         assert (filter[i] < nJob);
         memcpy (&d[filter[i] * sizeJob], &s[i * sizeJob], sizeJob);
