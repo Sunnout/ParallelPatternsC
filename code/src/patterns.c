@@ -1,6 +1,7 @@
 #include <string.h>
 #include <assert.h>
 #include <omp.h>
+#include <stdlib.h>
 #include "patterns.h"
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
@@ -31,17 +32,44 @@ void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(
 }
 
 void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
-    /* To be implemented */
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
     char *d = dest;
     char *s = src;
-    if (nJob > 1) {
-        memcpy (&d[0], &s[0], sizeJob);
-        for (int i = 1;  i < nJob;  i++)
-            worker (&d[i * sizeJob], &d[(i-1) * sizeJob], &s[i * sizeJob]);
+
+    char * intermediateValues = malloc(sizeJob * nJob);
+    char * initial = malloc(sizeJob);
+    memcpy(&initial[0], 0, sizeJob);
+
+    #pragma omp parallel
+    {
+        #pragma omp for
+        for (int i = 1;  i < nJob;  i++) {
+            reduce(d, s, nJob, sizeJob, worker);
+            memcpy (&intermediateValues[i * sizeJob], &d[i * sizeJob], sizeJob);
+        }
+
+        #pragma omp single
+        {
+            char * tmp = malloc(sizeJob);
+
+            for(int i = 1; i < nJob; i++) { 
+                memcpy (&tmp[0], &intermediateValues[i * sizeJob], sizeJob);
+                memcpy (&intermediateValues[i * sizeJob], &initial[0], sizeJob);
+                worker(&initial[0], &initial[0], &tmp[0]);
+            }
+        }
+
+        #pragma omp for
+        for(int i = 1; i < nJob; i++) {
+            memcpy (&initial[0], &intermediateValues[i * sizeJob], sizeJob);
+            worker(&d[i * sizeJob], &initial[0], &s[(i-1) * sizeJob]);
+        }
     }
+
+    free(intermediateValues);
+    free(initial);
 }
 
 int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
