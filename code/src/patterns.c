@@ -45,7 +45,6 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
 }
 
 int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
-    /* To be implemented */
     assert (dest != NULL);
     assert (src != NULL);
     assert (filter != NULL);
@@ -54,12 +53,17 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
     char *d = dest;
     char *s = src;
     int pos = 0;
-    for (int i=0; i < nJob; i++) {
-        if (filter[i]) {
-            memcpy (&d[pos * sizeJob], &s[i * sizeJob], sizeJob);
-            pos++;
+
+    #pragma omp parallel for ordered 
+        for (int i=0; i < nJob; i++) {
+            if (filter[i]) {
+                #pragma omp critical
+                {
+                    memcpy (&d[pos * sizeJob], &s[i * sizeJob], sizeJob);
+                    pos++;
+                }
+            }
         }
-    }
     return pos;
 }
 
