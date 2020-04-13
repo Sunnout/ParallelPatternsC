@@ -113,6 +113,20 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
 }
 
 void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2), size_t nWorkers) {
-    /* To be implemented */
-    map (dest, src, nJob, sizeJob, worker);  // it provides the right result, but is a very very vey bad implementation…
+    assert (dest != NULL);
+    assert (src != NULL);
+    assert (worker != NULL);
+    assert (nWorkers >= 0);
+    char *d = dest;
+    char *s = src;
+
+    #pragma omp parallel num_threads(nWorkers + 1)
+    {
+        #pragma omp single 
+        {
+        for (int i = 0;  i < nJob;  i++)
+            #pragma omp task shared(i)
+            worker (&d[i * sizeJob], &s[i * sizeJob]);
+        }
+    }
 }
