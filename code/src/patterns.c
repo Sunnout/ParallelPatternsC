@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <omp.h>
 #include "patterns.h"
+#include <stdio.h>
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
     assert (dest != NULL);
@@ -103,20 +104,30 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
     char *d = dest;
     char *s = src;
 
-    for (int j = 0;  j < nWorkers;  j++) {
-        assert (workerList[j] != NULL);
-        #pragma omp  parallel for
-        for (int i=0; i < nJob; i++) {
-            if( j == 0){
-                memcpy (&d[i * sizeJob], &s[i * sizeJob], sizeJob);
-            }
+    int nAntiDiagonal = nWorkers + nJob - 1;
 
-            workerList[j] (&d[i * sizeJob], &d[i * sizeJob]);
+    for (int a = 1; a <= nAntiDiagonal; a++) {
+        int nPoints = 0;
+        if(a < nWorkers) {
+            nPoints = a;
+        } 
+        else if (a > nJob) {
+            nPoints = nWorkers - (a - nJob);
+        } else {
+            nPoints = nWorkers;
         }
 
-        #pragma omp barrier
+        if(a <= nJob) {
+            memcpy (&d[(a-1) * sizeJob], &s[(a-1) * sizeJob], sizeJob); 
+            for (int i = nPoints, j = 1; i >= 1 && j <= nPoints; i-- , j++) {
+                workerList[(j-1)] (&d[(a-j) * sizeJob], &d[(a-j) * sizeJob]);
+            }
+        } else {
+            for (int i = nPoints, j = 1; i >= 1 && j <= nPoints; i-- , j++) {
+                workerList[(j-1 +(a-nJob))] (&d[(nJob-j) * sizeJob], &d[(nJob-j) * sizeJob]);
+            }
+        }
     }
-
 }
 
 void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2), size_t nWorkers) {
