@@ -124,9 +124,10 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     {
         #pragma omp single 
         {
-        for (int i = 0;  i < nJob;  i++)
-            #pragma omp task shared(i)
-            worker (&d[i * sizeJob], &s[i * sizeJob]);
+            for (int i = 0;  i < nJob;  i++) {
+                #pragma omp task 
+                worker (&d[i * sizeJob], &s[i * sizeJob]);
+            }
         }
     }
 }
