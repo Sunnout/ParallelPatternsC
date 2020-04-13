@@ -119,11 +119,13 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
 
         if(a <= nJob) {
             memcpy (&d[(a-1) * sizeJob], &s[(a-1) * sizeJob], sizeJob); 
-            for (int i = nPoints, j = 1; i >= 1 && j <= nPoints; i-- , j++) {
+            #pragma omp parallel for
+            for (int  j = 1;  j <= nPoints; j++) {
                 workerList[(j-1)] (&d[(a-j) * sizeJob], &d[(a-j) * sizeJob]);
             }
         } else {
-            for (int i = nPoints, j = 1; i >= 1 && j <= nPoints; i-- , j++) {
+            #pragma omp parallel for
+            for (int j = 1; j <= nPoints;  j++) {
                 workerList[(j-1 +(a-nJob))] (&d[(nJob-j) * sizeJob], &d[(nJob-j) * sizeJob]);
             }
         }
