@@ -108,14 +108,26 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
 
     for (int a = 1; a <= nAntiDiagonal; a++) {
         int nPoints = 0;
-        if(a < nWorkers) {
+        if(a < nWorkers && a <= nJob) {
             nPoints = a;
         } 
-        else if (a > nJob) {
-            nPoints = nWorkers - (a - nJob);
-        } else {
-            nPoints = nWorkers;
+        else if(nWorkers > nJob){
+            if (a - nAntiDiagonal < nJob){
+                nPoints = nJob;
+            }
+            else {
+                nPoints = a - nAntiDiagonal +1;
+            }
         }
+        else {
+         if (a > nJob) {
+            nPoints = nWorkers - (a - nJob);
+         } 
+         else {
+            nPoints = nWorkers;
+            }        
+        }
+        
 
         if(a <= nJob) {
             memcpy (&d[(a-1) * sizeJob], &s[(a-1) * sizeJob], sizeJob); 
