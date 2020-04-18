@@ -104,38 +104,47 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
     char *d = dest;
     char *s = src;
 
+    // Number of Antidiagonals
     int nAntiDiagonal = nWorkers + nJob - 1;
 
+    // Iterate over the antidiagonals
     for (int a = 1; a <= nAntiDiagonal; a++) {
         int nPoints = 0;
-        if(a < nWorkers && a <= nJob) {
+        // If the antidiagonal is in the ramp up section
+        if(a <= nWorkers && a <= nJob) {
             nPoints = a;
         } 
         else if(nWorkers > nJob){
-            if (a - nAntiDiagonal < nJob){
+            // If the antidiagonal is in the max efficiency section
+            if (a <= nAntiDiagonal - (nJob-1)){
                 nPoints = nJob;
             }
+            // if the antidiagonal is in the slow down section
             else {
-                nPoints = a - nAntiDiagonal +1;
+                nPoints = nAntiDiagonal - a + 1;
             }
         }
+        // Else , if Nworkers <= nJob and its not in the ramp up section
         else {
+           // If the antidiagonal is in the slow down section 
          if (a > nJob) {
             nPoints = nWorkers - (a - nJob);
          } 
+        // If the antidiagonal is in the max efficiency section
          else {
             nPoints = nWorkers;
             }        
         }
-        
-
+        //Initial ramp up and part of max efficiency sections
         if(a <= nJob) {
             memcpy (&d[(a-1) * sizeJob], &s[(a-1) * sizeJob], sizeJob); 
             #pragma omp parallel for
             for (int  j = 1;  j <= nPoints; j++) {
                 workerList[(j-1)] (&d[(a-j) * sizeJob], &d[(a-j) * sizeJob]);
             }
-        } else {
+        } 
+        // Part of max efficiency secion and slow down section
+        else {
             #pragma omp parallel for
             for (int j = 1; j <= nPoints;  j++) {
                 workerList[(j-1 +(a-nJob))] (&d[(nJob-j) * sizeJob], &d[(nJob-j) * sizeJob]);
