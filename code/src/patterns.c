@@ -37,15 +37,15 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
-    buildTreeBottomUp (src, nJob,sizeJob, worker);
-    struct treeNode * tree = getTree();
+
+    buildTreeBottomUp (src, nJob, sizeJob, worker);
+
+    TreeNode * tree = getTree();
     
-
     for ( int  i = 0 ; i < 15 ; i++){
-        struct treeNode * node = &tree[i * sizeof(struct treeNode)];
-        printf("Range(%d,%d) , Sum = %p , Fromleft = %p \n",node->min,node->max, (void *)node->sum, (void *)node->fromLeft);
+        TreeNode node = tree[i * sizeof(TreeNode)];
+        printf("Range(%d,%d) , Sum = %p , Fromleft = %p \n",node.min, node.max, node.sum, node.fromLeft);
     }
-
 }
 
 int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {

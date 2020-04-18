@@ -1,18 +1,16 @@
 #ifndef _BTREE_H
 #define __BTREE_H
 
-struct treeNode  
+
+typedef struct   
 { 
   int min;
   int max;
   void * sum; 
   void * fromLeft;
-} ;
+} TreeNode;
 
-
-
-
-struct treeNode * tree;
+TreeNode * tree;
 
 void buildTreeBottomUp (
     void *src,
@@ -25,14 +23,15 @@ void traverseTreeTopDown (
 
 );
 
-struct treeNode * getLeftChild (
+TreeNode getLeftChild (
     int parent
 );
 
-struct treeNode * getRightChild (
+TreeNode getRightChild (
     int parent
 );
 
-struct treeNode * getTree();
+TreeNode * getTree(
+);
 
 #endif

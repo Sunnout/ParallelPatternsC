@@ -6,63 +6,59 @@
 #include <stdio.h>
 
 
-
-
-
 void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
-    tree = malloc(sizeof(struct treeNode)*((nJob*2)-1));
-
+    tree = (TreeNode *) malloc(sizeof(TreeNode)*(nJob*2-1));
     char * s = src;
-
 
     int pos = nJob - 1; 
     for(int i = 0; i < nJob; i++) {
-        struct treeNode * node = (struct treeNode *) malloc(sizeof(struct treeNode)); 
-        node->min = i;
-        node->max = i+1;
-        void * sum = malloc(sizeJob);
-        memcpy (&sum, &s[i*sizeJob], sizeJob);
-        node-> sum =sum;
-        node->fromLeft = malloc(sizeJob);
+        TreeNode node;
+        node.min = i;
+        node.max = i+1;
+        node.sum = malloc(sizeJob);
+        memcpy(&node.sum, &s[i*sizeJob], sizeJob);
+        node.fromLeft = malloc(sizeJob);        
         
-        printf("Vou meter na tree com min %d , max %d NA posição %d\n" , node->min,node->max,pos);
-        memcpy (&tree[pos*sizeof(struct treeNode)], node, sizeof(struct treeNode));
+        memcpy (&tree[pos*sizeof(TreeNode)], &node, sizeof(TreeNode));
         pos++;
     }
 
     pos = (nJob - 1)/2; 
-    printf("Im first pos = %d \n",pos);
-    for(int i = pos; i >= 0; pos = pos/2) {
-        printf("Eu sou o i = %d \n",i);
-        for(int j = pos; j < pos + (pos + 1); j++) {
-            printf("eu sou o j %d \n",j);
-            struct treeNode * node = (struct treeNode *) malloc(sizeof(struct treeNode)); 
-            struct treeNode * nodeLeft  = getLeftChild(j);
-            struct treeNode * nodeRight = getRightChild(j);
+    int createdRoot = 0;
 
-            node->min = nodeLeft->min;
-            node->max = nodeRight->max;
-            printf("quase no worker \n");
-           // worker(node->sum, nodeLeft->sum, nodeRight->sum);
-            node->fromLeft = malloc(sizeJob);
-            printf("Vou meter na tree com min %d , max %d NA posição %d\n" , node->min,node->max,j);
-            memcpy (&tree[j*sizeof(struct treeNode)], node, sizeof(struct treeNode));
+    for(int i = pos; i >= 0 && !createdRoot; i = i/2) {
+        for(int j = i; j < i + (i + 1); j++) {   
+
+            TreeNode nodeLeft  = getLeftChild(j);
+            TreeNode nodeRight = getRightChild(j);
+            TreeNode node;
+            node.min = nodeLeft.min;
+            node.max = nodeRight.max;
+            node.sum = malloc(sizeJob);
+            worker(&node.sum, &nodeLeft.sum, &nodeRight.sum);
+            node.fromLeft = malloc(sizeJob);
+
+            memcpy (&tree[j*sizeof(TreeNode)], &node, sizeof(TreeNode));
+
+            if(i == 0) {
+                createdRoot = 1;
+            }
         }
-    }  
+    } 
 }
 
 void traverseTreeTopDown () {
 
 }
 
-struct treeNode * getLeftChild(int parent) {
-    return  &tree[(2*parent+1)*sizeof(struct treeNode)];
+TreeNode getLeftChild(int parent) {
+    return tree[(2*parent+1)*sizeof(TreeNode)];
 }
 
-struct treeNode * getRightChild(int parent) {
-    return &tree[(2*parent+2)*sizeof(struct treeNode)];
+TreeNode getRightChild(int parent) {
+    return tree[(2*parent+2)*sizeof(TreeNode)];
 }
 
-struct treeNode * getTree(){
+TreeNode * getTree(){
     return tree;
 }
