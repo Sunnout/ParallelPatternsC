@@ -1,6 +1,18 @@
 #ifndef _BTREE_H
 #define __BTREE_H
 
+struct treeNode  
+{ 
+  int min;
+  int max;
+  void * sum; 
+  void * fromLeft;
+} ;
+
+
+
+
+struct treeNode * tree;
 
 void buildTreeBottomUp (
     void *src,
@@ -20,5 +32,7 @@ struct treeNode * getLeftChild (
 struct treeNode * getRightChild (
     int parent
 );
+
+struct treeNode * getTree();
 
 #endif
