@@ -5,10 +5,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+TreeNode * tree;
 
 void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     tree = (TreeNode *) malloc(sizeof(TreeNode)*(nJob*2-1));
-    char * s = src;
+    char * s = (char *) src;
 
     int pos = nJob - 1; 
     for(int i = 0; i < nJob; i++) {
@@ -16,10 +17,10 @@ void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(v
         node.min = i;
         node.max = i+1;
         node.sum = malloc(sizeJob);
-        memcpy(&node.sum, &s[i*sizeJob], sizeJob);
+        memcpy(node.sum, &s[i*sizeJob], sizeJob);
         node.fromLeft = malloc(sizeJob);        
         
-        memcpy (&tree[pos*sizeof(TreeNode)], &node, sizeof(TreeNode));
+        memcpy (&tree[pos], &node, sizeof(TreeNode));
         pos++;
     }
 
@@ -35,10 +36,10 @@ void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(v
             node.min = nodeLeft.min;
             node.max = nodeRight.max;
             node.sum = malloc(sizeJob);
-            worker(&node.sum, &nodeLeft.sum, &nodeRight.sum);
+            worker(node.sum, nodeLeft.sum, nodeRight.sum);
             node.fromLeft = malloc(sizeJob);
 
-            memcpy (&tree[j*sizeof(TreeNode)], &node, sizeof(TreeNode));
+            memcpy (&tree[j], &node, sizeof(TreeNode));
 
             if(i == 0) {
                 createdRoot = 1;
@@ -52,11 +53,11 @@ void traverseTreeTopDown () {
 }
 
 TreeNode getLeftChild(int parent) {
-    return tree[(2*parent+1)*sizeof(TreeNode)];
+    return tree[(2*parent+1)];
 }
 
 TreeNode getRightChild(int parent) {
-    return tree[(2*parent+2)*sizeof(TreeNode)];
+    return tree[(2*parent+2)];
 }
 
 TreeNode * getTree(){

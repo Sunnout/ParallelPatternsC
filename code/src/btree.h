@@ -10,7 +10,6 @@ typedef struct
   void * fromLeft;
 } TreeNode;
 
-TreeNode * tree;
 
 void buildTreeBottomUp (
     void *src,
