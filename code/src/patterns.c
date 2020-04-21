@@ -39,10 +39,11 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     assert (worker != NULL);
 
     buildTreeBottomUp (src, nJob, sizeJob, worker);
+    traverseTreeTopDown (nJob,sizeJob,src,dest,worker);
 
     TreeNode * tree = getTree();
     
-    for ( int  i = 0 ; i < 15 ; i++){
+    for ( int  i = 0 ; i < 7 ; i++){
         TreeNode node = tree[i];
         printf("Range(%d,%d) , Sum = %f , Fromleft = %f \n",node.min, node.max, *(double*)node.sum, *(double*)node.fromLeft);
     }

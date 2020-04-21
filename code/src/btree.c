@@ -4,14 +4,16 @@
 #include "btree.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 TreeNode * tree;
 
 void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
-    tree = (TreeNode *) malloc(sizeof(TreeNode)*(nJob*2-1));
+    size_t nextPow2 = nextPower_2(nJob);
+    tree = (TreeNode *) malloc(sizeof(TreeNode)*(nextPow2*2-1));
     char * s = (char *) src;
 
-    int pos = nJob - 1; 
+    int pos = nextPow2 - 1; 
     for(int i = 0; i < nJob; i++) {
         TreeNode node;
         node.min = i;
@@ -23,6 +25,8 @@ void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(v
         memcpy (&tree[pos], &node, sizeof(TreeNode));
         pos++;
     }
+
+    
 
     pos = (nJob - 1)/2; 
     int createdRoot = 0;
@@ -48,7 +52,26 @@ void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(v
     } 
 }
 
-void traverseTreeTopDown () {
+// Admits there is a tree initialized
+void traverseTreeTopDown (size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+    // All nodes excepts the leafs
+    int nNodes = nJob * 2 -1 - nJob;
+    char *s = (char *) src;
+    char *d = (char *) dest;
+
+    for ( int i = 0 ; i < nNodes; i++){
+        TreeNode current = tree[i];
+        TreeNode leftChild = getLeftChild(i);
+        TreeNode rightChild = getRightChild(i);
+
+        memcpy(leftChild.fromLeft, current.fromLeft , sizeJob);
+        worker(rightChild.fromLeft, leftChild.sum, current.fromLeft);
+    }
+
+    for( int i = 0 ; i < nJob ; i++ ){
+        int j = nNodes + i;
+        worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
+    }
 
 }
 
@@ -63,3 +86,16 @@ TreeNode getRightChild(int parent) {
 TreeNode * getTree(){
     return tree;
 }
+
+int  nextPower_2 ( unsigned  int  x )
+
+{
+
+   x = x - 1; 
+   x = x | (x >> 1); 
+   x = x | (x >> 2); 
+   x = x | (x >> 4); 
+   x = x | (x >> 8); 
+   return x + 1; 
+}
+

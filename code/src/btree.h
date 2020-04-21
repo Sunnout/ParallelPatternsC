@@ -32,5 +32,6 @@ TreeNode getRightChild (
 
 TreeNode * getTree(
 );
+int nextPower_2(unsigned int n); 
 
 #endif
