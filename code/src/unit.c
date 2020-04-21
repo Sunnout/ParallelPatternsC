@@ -68,6 +68,11 @@ static void workerDivTwo(void* a, const void* b) {
     *(TYPE *)a = *(TYPE *)b / 2;
 }
 
+static void workerBig(void* a, const void* b) {
+    for(int i = 0; i < 1000000; i++){;}
+     *(TYPE *)a = *(TYPE *)b + 1;
+}
+
 
 //=======================================================
 // Unit testing funtions
@@ -148,7 +153,7 @@ void testPipeline (void *src, size_t n, size_t size) {
 
 void testFarm (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
-    farm (dest, src, n, size, workerAddOne, 3);
+    farm (dest, src, n, size, workerBig, 3);
     printDouble (dest, n, __FUNCTION__);
     free (dest);
 }
