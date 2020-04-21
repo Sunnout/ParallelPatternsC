@@ -43,7 +43,7 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
 
     TreeNode * tree = getTree();
     
-    for ( int  i = 0 ; i < 7 ; i++){
+    for ( int  i = 0 ; i < 15 ; i++){
         TreeNode node = tree[i];
         printf("Range(%d,%d) , Sum = %f , Fromleft = %f \n",node.min, node.max, *(double*)node.sum, *(double*)node.fromLeft);
     }
