@@ -61,6 +61,52 @@ void buildTreeBottomUp (void *src, size_t nJob, size_t sizeJob, void (*worker)(v
     } 
 }
 
+void buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
+    tree = (TreeNode *) malloc(sizeof(TreeNode)*(nJob*2-1));
+    #pragma omp parallel 
+    {
+    #pragma omp single
+    createTreeNode(0, 0, nJob, src, nJob, sizeJob, worker);
+    }
+}
+
+void createTreeNode (int current, int min, int max, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
+    char * s = (char *)src;
+
+    if(current >= nJob-1) {
+        TreeNode node;
+        node.min = current-(nJob-1);
+        node.max = current-(nJob-2);
+        node.sum = malloc(sizeJob);
+        memcpy(node.sum, &s[node.min*sizeJob], sizeJob);
+        node.fromLeft = calloc(1,sizeJob);      
+        memcpy (&tree[current], &node, sizeof(TreeNode));
+    } else {
+        int split = (max-min)/2 + min;
+        //Create left child
+        #pragma omp task
+        {
+            createTreeNode(2*current+1, min, split, src, nJob, sizeJob, worker);
+        }
+        //Create right child
+        #pragma omp task
+        {
+            createTreeNode(2*current+2, split, max, src, nJob, sizeJob, worker);
+        }
+        #pragma omp taskwait
+
+        TreeNode node;
+        TreeNode nodeLeft  = getLeftChild(current);
+        TreeNode nodeRight = getRightChild(current);
+        node.min = min;
+        node.max = max;
+        node.sum = malloc(sizeJob);
+        worker(node.sum, nodeLeft.sum, nodeRight.sum);
+        node.fromLeft = calloc(1,sizeJob);
+        memcpy (&tree[current], &node, sizeof(TreeNode));
+    }
+}
+
 // Admits there is a tree initialized
 void traverseTreeTopDown (size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
     // All nodes excepts the leafs
@@ -84,6 +130,19 @@ void traverseTreeTopDown (size_t nJob, size_t sizeJob, void* src ,void * dest,vo
     }
 
 }
+
+void traverseTree (size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+
+
+    updateTreeNode(nJob, sizeJob, src, dest, worker);
+
+    
+}
+
+void updateTreeNode (size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+    
+}
+
 
 TreeNode getLeftChild(int parent) {
     return tree[(2*parent+1)];

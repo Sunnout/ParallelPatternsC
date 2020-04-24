@@ -38,15 +38,23 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     assert (src != NULL);
     assert (worker != NULL);
 
-    buildTreeBottomUp (src, nJob, sizeJob, worker);
-    traverseTreeTopDown (nJob,sizeJob,src,dest,worker);
+    buildTree (src, nJob, sizeJob, worker);
+    traverseTree (nJob,sizeJob,src,dest,worker);
+
+    #pragma omp parallel for
+    for (int i = 0 ; i < nJob ; i++){
+        int j = nJob-1 + i;
+        worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
+    }
 
     TreeNode * tree = getTree();
     
-    for ( int  i = 0 ; i < 15 ; i++){
+    for ( int  i = 0 ; i < 31 ; i++){
         TreeNode node = tree[i];
         printf("Range(%d,%d) , Sum = %f , Fromleft = %f \n",node.min, node.max, *(double*)node.sum, *(double*)node.fromLeft);
     }
+
+   
 }
 
 int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
