@@ -38,18 +38,25 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     assert (src != NULL);
     assert (worker != NULL);
 
+    char *s = (char *) src;
+    char *d = (char *) dest;
+
     buildTree (src, nJob, sizeJob, worker);
     traverseTree (nJob,sizeJob,src,dest,worker);
 
+    TreeNode * tree = getTree();
+
+    size_t nextPow2 = nextPower_2(nJob);
+    int nNodes = nextPow2 * 2 -1 - nextPow2;
+
     #pragma omp parallel for
-    for (int i = 0 ; i < nJob ; i++){
-        int j = nJob-1 + i;
+    for (int i = 0 ; i < nJob; i++){
+        int j = nNodes + i;
         worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
     }
 
-    TreeNode * tree = getTree();
     
-    for ( int  i = 0 ; i < 31 ; i++){
+    for ( int  i = 0 ; i < 15 ; i++){
         TreeNode node = tree[i];
         printf("Range(%d,%d) , Sum = %f , Fromleft = %f \n",node.min, node.max, *(double*)node.sum, *(double*)node.fromLeft);
     }
@@ -129,3 +136,4 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     /* To be implemented */
     map (dest, src, nJob, sizeJob, worker);  // it provides the right result, but is a very very vey bad implementation…
 }
+
