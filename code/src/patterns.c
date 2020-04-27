@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "patterns.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
     assert (dest != NULL);
@@ -190,24 +192,35 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     free(tree);
 }
 
+void workerPreffixSum(void* a, const void* b, const void* c) {
+    // a = b + c
+    *(int *)a = *(int *)b + *(int *)c;
+}
+
 
 int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
-    /* To be implemented */
     assert (dest != NULL);
     assert (src != NULL);
     assert (filter != NULL);
     assert (nJob >= 0);
     assert (sizeJob > 0);
-    char *d = dest;
-    char *s = src;
-    int pos = 0;
+    char * d = (char *)dest;
+    char * s = (char *)src;
+    void * f = (void *)filter;
+
+    void * parallel_preffix = calloc(1, nJob * sizeof(int));
+    scan(parallel_preffix, f, nJob, sizeof(int), workerPreffixSum);
+    char * bitsum = (char *) parallel_preffix;
+    int res = bitsum[(nJob-1)*sizeof(int)];
+
+    #pragma omp parallel for
     for (int i=0; i < nJob; i++) {
         if (filter[i]) {
-            memcpy (&d[pos * sizeJob], &s[i * sizeJob], sizeJob);
-            pos++;
+            memcpy (&d[(bitsum[i*sizeof(int)]-1) * sizeJob], &s[i * sizeJob], sizeJob);
         }
     }
-    return pos;
+    free(parallel_preffix);
+    return res;
 }
 
 void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter, int nFilter) {
