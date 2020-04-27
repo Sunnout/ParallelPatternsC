@@ -158,6 +158,8 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
         int j = nNodes + i;
         worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
     } 
+
+    free(tree);
 }
 
 
