@@ -7,8 +7,8 @@ void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
-    char *d = dest;
-    char *s = src;
+    char *d = (char *) dest;
+    char *s = (char *) src;
 
     #pragma omp parallel for
     for (int i = 0;  i < nJob;  i++) {
