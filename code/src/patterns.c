@@ -4,12 +4,13 @@
 #include "patterns.h"
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
-    /* To be implemented */
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
-    char *d = dest;
-    char *s = src;
+    char *d = (char *) dest;
+    char *s = (char *) src;
+
+    #pragma omp parallel for
     for (int i = 0;  i < nJob;  i++) {
         worker (&d[i * sizeJob], &s[i * sizeJob]);
     }
