@@ -88,8 +88,8 @@ void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *fil
     assert (filter != NULL);
     assert (nJob >= 0);
     assert (sizeJob > 0);
-    char *d = dest;
-    char *s = src;
+    char *d = (char *) dest;
+    char *s = (char *) src;
 
     #pragma omp parallel for
     for (int i=0; i < nJob; i++) {
