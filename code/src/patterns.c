@@ -64,6 +64,7 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
     void * parallel_preffix = calloc(1, nJob * sizeof(int));
     scan(parallel_preffix, f, nJob, sizeof(int), workerPreffixSum);
     char * bitsum = (char *) parallel_preffix;
+    int res = bitsum[(nJob-1)*sizeof(int)];
 
     #pragma omp parallel for
     for (int i=0; i < nJob; i++) {
@@ -71,7 +72,8 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
             memcpy (&d[(bitsum[i*sizeof(int)]-1) * sizeJob], &s[i * sizeJob], sizeJob);
         }
     }
-    return bitsum[(nJob-1)*sizeof(int)];
+    free(parallel_preffix);
+    return res;
 }
 
 void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter, int nFilter) {
