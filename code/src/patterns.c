@@ -101,8 +101,8 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
     assert (workerList != NULL);
     assert (nJob >= 0);
     assert (sizeJob > 0);
-    char *d = dest;
-    char *s = src;
+    char *d =(char *) dest;
+    char *s =(char *) src;
 
     // Number of Antidiagonals
     int nAntiDiagonal = nWorkers + nJob - 1;
