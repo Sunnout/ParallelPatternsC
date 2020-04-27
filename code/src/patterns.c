@@ -9,8 +9,8 @@ void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
-    char *d = dest;
-    char *s = src;
+    char *d = (char *) dest;
+    char *s = (char *) src;
 
     #pragma omp parallel for
     for (int i = 0;  i < nJob;  i++) {
@@ -19,16 +19,44 @@ void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
 }
 
 void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
-    /* To be implemented */
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
-    char *d = dest;
-    char *s = src;
-    if (nJob > 0) {
-        memcpy (&d[0], &s[0], sizeJob);
-        for (int i = 1;  i < nJob;  i++)
-            worker (&d[0], &d[0], &s[i * sizeJob]);
+    char *d = (char *) dest;
+    char *s = (char *) src;
+    int threadNum;
+    char * privDest;
+
+    if (nJob > 0) {        
+       #pragma omp parallel private(privDest)
+       {
+            privDest = malloc(sizeJob);
+            int first = 1;
+
+            #pragma omp for
+            for (int i = 0; i < nJob; i++) {
+                if(first){
+                    memcpy(&privDest[0], &s[i * sizeJob], sizeJob);
+                    first = 0;
+                }
+                else
+                    worker (&privDest[0], &privDest[0], &s[i * sizeJob]);
+            }
+
+            #pragma omp single 
+            {
+                memcpy(&d[0], &privDest[0], sizeJob);
+                threadNum = omp_get_thread_num();
+            }
+
+            #pragma omp critical 
+            {
+                if(omp_get_thread_num() != threadNum) {
+                    worker(&d[0], &d[0], &privDest[0]);
+                }
+            }
+            free(privDest);
+        }
     }
 }
 
