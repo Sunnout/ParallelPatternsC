@@ -6,6 +6,9 @@
 #include "patterns.h"
 
 
+/*------------------------------------ MAP PATTERN ---------------------------------*/
+
+
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
     assert (dest != NULL);
     assert (src != NULL);
@@ -18,6 +21,10 @@ void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
         worker (&d[i * sizeJob], &s[i * sizeJob]);
     }
 }
+
+
+/*------------------------------------ REDUCE PATTERN ---------------------------------*/
+
 
 void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     assert (dest != NULL);
@@ -60,6 +67,7 @@ void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(
         }
     }
 }
+
 
 /*------------------------------------ SCAN PATTERN ---------------------------------*/
 
@@ -191,6 +199,9 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     free(tree);
 }
 
+/*------------------------------------ PACK PATTERN ---------------------------------*/
+
+
 void workerPreffixSum(void* a, const void* b, const void* c) {
     // a = b + c
     *(int *)a = *(int *)b + *(int *)c;
@@ -222,6 +233,9 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
     return res;
 }
 
+/*------------------------------------ GATHER PATTERN ---------------------------------*/
+
+
 void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter, int nFilter) {
     assert (dest != NULL);
     assert (src != NULL);
@@ -238,6 +252,9 @@ void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filt
         memcpy (&d[i * sizeJob], &s[filter[i] * sizeJob], sizeJob);
     }
 }
+
+/*------------------------------------ SCATTER PATTERN ---------------------------------*/
+
 
 /**
  * WARNING - This implementation of scatter is non deterministic when the filter array contains repeatead elements
@@ -257,6 +274,9 @@ void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *fil
         memcpy (&d[filter[i] * sizeJob], &s[i * sizeJob], sizeJob);
     }
 }
+
+/*------------------------------------ PIPELINE PATTERN ---------------------------------*/
+
 
 void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*workerList[])(void *v1, const void *v2), size_t nWorkers) {
     assert (dest != NULL);
@@ -316,6 +336,9 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
     }
 }
 
+/*------------------------------------ FARM PATTERN ---------------------------------*/
+
+
 void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2), size_t nWorkers) {
     assert (dest != NULL);
     assert (src != NULL);
@@ -329,21 +352,16 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
 
     #pragma omp parallel shared(flagWorkers)
     {
-        //omp master
         #pragma omp master 
-        {
-            //array com flags tamanho nWorks variável shared
-            //guardar index da flag levantada
-            //loop infinito a percorrer array se worker estiver disponível && counter de Jobs feitos muda a flag e cria task
-            
+        { 
             while( finished < nJob) {
                 for(int j = 0; j <nWorkers ; j++ ){
                     if ( flagWorkers[j] == 0){
                         flagWorkers[j] = 1; 
                         #pragma omp task
                         {
-                        worker (&d[finished * sizeJob], &s[finished * sizeJob]);
-                        flagWorkers[j] = 0; 
+                            worker (&d[finished * sizeJob], &s[finished * sizeJob]);
+                            flagWorkers[j] = 0; 
                         }
                         finished ++;
                     }
