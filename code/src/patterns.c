@@ -53,15 +53,7 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     for (int i = 0 ; i < nJob; i++){
         int j = nNodes + i;
         worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
-    }
-
-    
-    for ( int  i = 0 ; i < 15 ; i++){
-        TreeNode node = tree[i];
-        printf("Range(%d,%d) , Sum = %f , Fromleft = %f \n",node.min, node.max, *(double*)node.sum, *(double*)node.fromLeft);
-    }
-
-   
+    } 
 }
 
 int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
