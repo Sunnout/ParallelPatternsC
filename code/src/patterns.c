@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "patterns.h"
-#include "btree.h"
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
     assert (dest != NULL);
@@ -33,6 +32,113 @@ void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(
     }
 }
 
+/*------------------------------------ SCAN PATTERN ---------------------------------*/
+
+typedef struct   
+{ 
+  int min;
+  int max;
+  void * sum; 
+  void * fromLeft;
+} TreeNode;
+
+int nextPower_2 (int x) {
+   x = x - 1; 
+   x = x | (x >> 1); 
+   x = x | (x >> 2); 
+   x = x | (x >> 4); 
+   x = x | (x >> 8); 
+   return x + 1; 
+}
+
+TreeNode getLeftChild(TreeNode * tree, int parent) {
+    return tree[(2*parent+1)];
+}
+
+TreeNode getRightChild(TreeNode * tree, int parent) {
+    return tree[(2*parent+2)];
+}
+
+void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, size_t nJob,size_t nPow, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
+    char * s = (char *)src;
+
+    if(current >= nPow-1) {
+        TreeNode node;
+        node.min = current-(nPow-1);
+        node.max = current-(nPow-2);
+        node.sum = malloc(sizeJob);
+        if(node.min < nJob)
+            memcpy(node.sum, &s[node.min*sizeJob], sizeJob);
+        node.fromLeft = calloc(1,sizeJob);      
+        memcpy (&tree[current], &node, sizeof(TreeNode));
+    } else {
+        int split = (max-min)/2 + min;
+        //Create left child
+        #pragma omp task
+        {
+            createTreeNode(tree, 2*current+1, min, split, src, nJob,nPow, sizeJob, worker);
+        }
+        //Create right child
+        #pragma omp task
+        {
+            createTreeNode(tree, 2*current+2, split, max, src, nJob,nPow, sizeJob, worker);
+        }
+        #pragma omp taskwait
+
+        TreeNode node;
+        TreeNode nodeLeft  = getLeftChild(tree, current);
+        TreeNode nodeRight = getRightChild(tree, current);
+        node.min = min;
+        node.max = max;
+        node.sum = malloc(sizeJob);
+        worker(node.sum, nodeLeft.sum, nodeRight.sum);
+        node.fromLeft = calloc(1, sizeJob);
+        memcpy (&tree[current], &node, sizeof(TreeNode));
+    }
+}
+
+TreeNode * buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
+    size_t nextPow2 = nextPower_2(nJob);
+    TreeNode * tree = (TreeNode *) malloc(sizeof(TreeNode)*(nextPow2*2-1));
+
+    #pragma omp parallel 
+    {
+    #pragma omp single
+    createTreeNode(tree, 0, 0, nextPow2, src,nJob, nextPow2, sizeJob, worker);
+    }
+    return tree;
+}
+
+void updateTreeNode (TreeNode * tree, int current,size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+    TreeNode currentNode = tree[current];
+    TreeNode leftChild = getLeftChild(tree, current);
+    TreeNode rightChild = getRightChild(tree, current);
+
+    memcpy(leftChild.fromLeft, currentNode.fromLeft, sizeJob);
+    worker(rightChild.fromLeft, leftChild.sum, currentNode.fromLeft);
+
+    if( current*2+1 < nJob-1 || current*2+2 < nJob-1 ){
+        #pragma omp task
+        {
+            updateTreeNode(tree, current*2+1, nJob, sizeJob, src, dest, worker);
+        }
+        #pragma omp task
+        {
+            updateTreeNode(tree, current*2+2, nJob, sizeJob, src, dest, worker);
+        }
+    }
+}
+
+void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+    size_t nextPow2 = nextPower_2(nJob);
+ #pragma omp parallel 
+    {
+    #pragma omp single
+    updateTreeNode(tree, 0, nextPow2, sizeJob, src, dest, worker);
+    }
+}
+
+
 void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     assert (dest != NULL);
     assert (src != NULL);
@@ -41,10 +147,8 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     char *s = (char *) src;
     char *d = (char *) dest;
 
-    buildTree (src, nJob, sizeJob, worker);
-    traverseTree (nJob,sizeJob,src,dest,worker);
-
-    TreeNode * tree = getTree();
+    TreeNode * tree = buildTree (src, nJob, sizeJob, worker);
+    traverseTree (tree, nJob, sizeJob, src, dest, worker);
 
     size_t nextPow2 = nextPower_2(nJob);
     int nNodes = nextPow2 * 2 -1 - nextPow2;
@@ -55,6 +159,7 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
         worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
     } 
 }
+
 
 int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
     /* To be implemented */
