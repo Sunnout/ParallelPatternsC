@@ -117,14 +117,20 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     assert (src != NULL);
     assert (worker != NULL);
     assert (nWorkers >= 0);
-    char *d = dest;
-    char *s = src;
+    char *d = (char *) dest;
+    char *s = (char *) src;
 
+    // parallel não define num threads
     #pragma omp parallel num_threads(nWorkers + 1)
     {
+        //omp master
         #pragma omp single 
         {
+            //array com flags tamanho nWorks variável shared
+            //guardar index da flag levantada
+            //loop infinito a percorrer array se worker estiver disponível && counter de Jobs feitos muda a flag e cria task
             for (int i = 0;  i < nJob;  i++) {
+                //quando cria task ele fica à espera
                 #pragma omp task 
                 worker (&d[i * sizeJob], &s[i * sizeJob]);
             }
