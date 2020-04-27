@@ -224,15 +224,16 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
 }
 
 void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter, int nFilter) {
-    /* To be implemented */
     assert (dest != NULL);
     assert (src != NULL);
     assert (filter != NULL);
     assert (nJob >= 0);
     assert (sizeJob > 0);
     assert (nFilter >= 0);
-    char *d = dest;
-    char *s = src;
+    char *d = (char *) dest;
+    char *s = (char *) src;
+
+    #pragma omp parallel for
     for (int i=0; i < nFilter; i++) {
         assert (filter[i] < nJob);
         memcpy (&d[i * sizeJob], &s[filter[i] * sizeJob], sizeJob);
