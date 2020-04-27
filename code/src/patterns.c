@@ -4,8 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "patterns.h"
-#include <stdlib.h>
-#include <stdio.h>
+
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
     assert (dest != NULL);
@@ -318,7 +317,40 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
 }
 
 void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2), size_t nWorkers) {
-    /* To be implemented */
-    map (dest, src, nJob, sizeJob, worker);  // it provides the right result, but is a very very vey bad implementation…
-}
+    assert (dest != NULL);
+    assert (src != NULL);
+    assert (worker != NULL);
+    assert (nWorkers >= 0);
+    char *d = (char *) dest;
+    char *s = (char *) src;
 
+    int * flagWorkers = calloc(1,nWorkers*sizeof(int));
+    int finished = 0;
+
+    #pragma omp parallel shared(flagWorkers)
+    {
+        //omp master
+        #pragma omp master 
+        {
+            //array com flags tamanho nWorks variável shared
+            //guardar index da flag levantada
+            //loop infinito a percorrer array se worker estiver disponível && counter de Jobs feitos muda a flag e cria task
+            
+            while( finished < nJob) {
+                for(int j = 0; j <nWorkers ; j++ ){
+                    if ( flagWorkers[j] == 0){
+                        flagWorkers[j] = 1; 
+                        #pragma omp task
+                        {
+                        worker (&d[finished * sizeJob], &s[finished * sizeJob]);
+                        flagWorkers[j] = 0; 
+                        }
+                        finished ++;
+                    }
+                }
+            }
+            #pragma omp taskwait
+        }
+    }
+    free(flagWorkers);
+}
