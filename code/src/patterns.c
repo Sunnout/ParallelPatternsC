@@ -71,6 +71,7 @@ void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(
 
 /*------------------------------------ SCAN PATTERN ---------------------------------*/
 
+
 typedef struct   
 { 
   int min;
@@ -78,6 +79,7 @@ typedef struct
   void * sum; 
   void * fromLeft;
 } TreeNode;
+
 
 int nextPower_2 (int x) {
    x = x - 1; 
@@ -88,13 +90,16 @@ int nextPower_2 (int x) {
    return x + 1; 
 }
 
+
 TreeNode getLeftChild(TreeNode * tree, int parent) {
     return tree[(2*parent+1)];
 }
 
+
 TreeNode getRightChild(TreeNode * tree, int parent) {
     return tree[(2*parent+2)];
 }
+
 
 void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, size_t nJob,size_t nPow, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     char * s = (char *)src;
@@ -134,6 +139,7 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
     }
 }
 
+
 TreeNode * buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     size_t nextPow2 = nextPower_2(nJob);
     TreeNode * tree = (TreeNode *) malloc(sizeof(TreeNode)*(nextPow2*2-1));
@@ -145,6 +151,7 @@ TreeNode * buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
     }
     return tree;
 }
+
 
 void updateTreeNode (TreeNode * tree, int current,size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
     TreeNode currentNode = tree[current];
@@ -165,6 +172,7 @@ void updateTreeNode (TreeNode * tree, int current,size_t nJob, size_t sizeJob, v
         }
     }
 }
+
 
 void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
     size_t nextPow2 = nextPower_2(nJob);
@@ -198,6 +206,7 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
 
     free(tree);
 }
+
 
 /*------------------------------------ PACK PATTERN ---------------------------------*/
 
@@ -233,6 +242,7 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
     return res;
 }
 
+
 /*------------------------------------ GATHER PATTERN ---------------------------------*/
 
 
@@ -252,6 +262,7 @@ void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filt
         memcpy (&d[i * sizeJob], &s[filter[i] * sizeJob], sizeJob);
     }
 }
+
 
 /*------------------------------------ SCATTER PATTERN ---------------------------------*/
 
@@ -275,6 +286,7 @@ void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *fil
     }
 }
 
+
 /*------------------------------------ PIPELINE PATTERN ---------------------------------*/
 
 
@@ -287,7 +299,7 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
     char *d =(char *) dest;
     char *s =(char *) src;
 
-    // Number of Antidiagonals
+    // Number of antidiagonals
     int nAntiDiagonal = nWorkers + nJob - 1;
 
     // Iterate over the antidiagonals
@@ -302,12 +314,12 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
             if (a <= nAntiDiagonal - (nJob-1)){
                 nPoints = nJob;
             }
-            // if the antidiagonal is in the slow down section
+            // If the antidiagonal is in the slow down section
             else {
                 nPoints = nAntiDiagonal - a + 1;
             }
         }
-        // Else , if Nworkers <= nJob and its not in the ramp up section
+        // Else, if nWorkers <= nJob and its not in the ramp up section
         else {
            // If the antidiagonal is in the slow down section 
          if (a > nJob) {
@@ -318,7 +330,7 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
             nPoints = nWorkers;
             }        
         }
-        //Initial ramp up and part of max efficiency sections
+        // Initial ramp up and part of the max efficiency sections
         if(a <= nJob) {
             memcpy (&d[(a-1) * sizeJob], &s[(a-1) * sizeJob], sizeJob); 
             #pragma omp parallel for
@@ -326,7 +338,7 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
                 workerList[(j-1)] (&d[(a-j) * sizeJob], &d[(a-j) * sizeJob]);
             }
         } 
-        // Part of max efficiency secion and slow down section
+        // Part of the max efficiency section and slow down section
         else {
             #pragma omp parallel for
             for (int j = 1; j <= nPoints;  j++) {
@@ -335,6 +347,7 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
         }
     }
 }
+
 
 /*------------------------------------ FARM PATTERN ---------------------------------*/
 
