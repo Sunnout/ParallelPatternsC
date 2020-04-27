@@ -2,6 +2,7 @@
 #include <assert.h>
 #include <omp.h>
 #include "patterns.h"
+#include <stdlib.h>
 
 void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2)) {
     assert (dest != NULL);
@@ -126,33 +127,27 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     #pragma omp parallel shared(flagWorkers)
     {
         //omp master
-        #pragma omp single 
+        #pragma omp master 
         {
             //array com flags tamanho nWorks variável shared
             //guardar index da flag levantada
             //loop infinito a percorrer array se worker estiver disponível && counter de Jobs feitos muda a flag e cria task
-
-            for (int i = 0;  i < nJob;  i++) {
-                if( i == nJob -1)
-                    finished = 1;
             
-                while( !finished) {
-
-                    for(int j = 0; j <nWorkers ; j++ ){
-
-                        if ( flagWorkers[j] == 0){
-                            flagWorkers[j] = 1; 
-                            #pragma omp task
-                            {
-                        
-                            worker (&d[i * sizeJob], &s[i * sizeJob]);
-                            flagWorkers[j] = 0; 
-                            }
+            while( finished < nJob) {
+                for(int j = 0; j <nWorkers ; j++ ){
+                    if ( flagWorkers[j] == 0){
+                        flagWorkers[j] = 1; 
+                        #pragma omp task
+                        {
+                        worker (&d[finished * sizeJob], &s[finished * sizeJob]);
+                        flagWorkers[j] = 0; 
                         }
+                        finished ++;
                     }
-
                 }
             }
+
+            #pragma omp taskwait
         }
     }
 }
