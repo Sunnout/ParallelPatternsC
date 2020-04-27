@@ -146,8 +146,8 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
                     }
                 }
             }
-
             #pragma omp taskwait
         }
     }
+    free(flagWorkers);
 }
