@@ -120,8 +120,10 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     char *d = (char *) dest;
     char *s = (char *) src;
 
-    // parallel não define num threads
-    #pragma omp parallel num_threads(nWorkers + 1)
+    int * flagWorkers = calloc(1,nWorkers*sizeof(int));
+    int finished = 0;
+
+    #pragma omp parallel shared(flagWorkers)
     {
         //omp master
         #pragma omp single 
@@ -129,10 +131,27 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
             //array com flags tamanho nWorks variável shared
             //guardar index da flag levantada
             //loop infinito a percorrer array se worker estiver disponível && counter de Jobs feitos muda a flag e cria task
+
             for (int i = 0;  i < nJob;  i++) {
-                //quando cria task ele fica à espera
-                #pragma omp task 
-                worker (&d[i * sizeJob], &s[i * sizeJob]);
+                if( i == nJob -1)
+                    finished = 1;
+            
+                while( !finished) {
+
+                    for(int j = 0; j <nWorkers ; j++ ){
+
+                        if ( flagWorkers[j] == 0){
+                            flagWorkers[j] = 1; 
+                            #pragma omp task
+                            {
+                        
+                            worker (&d[i * sizeJob], &s[i * sizeJob]);
+                            flagWorkers[j] = 0; 
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }
