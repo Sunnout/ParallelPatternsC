@@ -184,6 +184,7 @@ void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src , voi
 }
 
 void freeTree (TreeNode * tree, int nNodes) {
+
     #pragma omp parallel for
     for(int i = 0; i < nNodes; i++) {
         TreeNode currentNode = tree[i];
@@ -215,7 +216,6 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     } 
 
     freeTree(tree, nextPow2*2-1);
-    //free(tree);
 }
 
 
