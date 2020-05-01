@@ -12,12 +12,12 @@
 /*------------------------------------ TYPE DOUBLE---------------------------------*/
 
 
-/*
+
 #define TYPE double
 #define RAND() drand48()
 #define PRINT(SRC, N, STRING) printDouble(SRC, N, STRING)
 
-*/
+
 
 /*------------------------------------ TYPE  LONG ---------------------------------*/
 
@@ -38,7 +38,7 @@
 
 /*------------------------------------ TYPE String ---------------------------------*/
 
-
+/*
 
 #define TYPE char *
 #define PRINT(SRC, N, STRING) printString(SRC, N, STRING)
@@ -56,7 +56,7 @@ char * randString (void) {
 }
 
 
-
+*/
 
 
 
@@ -114,7 +114,9 @@ int main(int argc, char* argv[]) {
             printf ("\n");
         }
         free (src);
-    } else {
+    } 
+
+
         printf ("Initializing SRC array\n");
         TYPE *src = malloc (sizeof(*src) * N);
         for (i = 0; i < N; i++)
@@ -125,6 +127,8 @@ int main(int argc, char* argv[]) {
         if (debug)
             printf ("\n\n");
 
+
+        printf("Doing %d Tests\n",nTestFunction);
         for (int i = 0;  i < nTestFunction;  i++) {
             double start = wctime();
             testFunction[i] (src, N, sizeof(*src));
@@ -135,7 +139,7 @@ int main(int argc, char* argv[]) {
         }
 
         free (src);
-    }
+    
     
     return 0;
 }
