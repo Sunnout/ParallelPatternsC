@@ -4020,7 +4020,7 @@ void testFarm (void *src, size_t n, size_t size) {
 
 typedef void (*TESTFUNCTION)(void *, size_t, size_t);
 
-/*
+
 TESTFUNCTION testFunction[] = {
     testMap,
     testReduce,
@@ -4044,8 +4044,9 @@ char *testNames[] = {
     "testFarm",
 };
 
-*/
 
+
+/*
 TESTFUNCTION testFunction[] = {
     testPackBigFilter,
 };
@@ -4053,7 +4054,7 @@ TESTFUNCTION testFunction[] = {
 char *testNames[] = {
     "testPackBigFilter",
 };
-
+*/
 int nTestFunction = sizeof (testFunction)/sizeof(testFunction[0]);
 
 

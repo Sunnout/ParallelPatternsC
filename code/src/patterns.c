@@ -240,17 +240,13 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
 
     void * parallel_preffix = calloc(1, nJob * sizeof(int));
     scan(parallel_preffix, f, nJob, sizeof(int), workerPreffixSum);
-    char * bitsum = (char *) parallel_preffix;
-    int res = bitsum[(nJob-1)*sizeof(int)];
-
-    for ( int j=0 ; j < nJob ;j++){
-        printf("bitsum[%d] = %d \n", j, bitsum[j*sizeof(int)]);
-    }
+    int * bitsum = (int *) parallel_preffix;
+    int res = bitsum[(nJob-1)];
     
     #pragma omp parallel for
     for (int i=0; i < nJob; i++) {
         if (filter[i]) {
-            memcpy (&d[(bitsum[i*sizeof(int)]-1) * sizeJob], &s[i * sizeJob], sizeJob);
+            memcpy (&d[(bitsum[i]-1) * sizeJob], &s[i * sizeJob], sizeJob);
         }
     }
     free(parallel_preffix);
