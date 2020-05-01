@@ -8,22 +8,37 @@
 #include "unit.h"
 #include "debug.h"
 
+
+/*------------------------------------ TYPE DOUBLE---------------------------------*/
+
+
 /*
 #define TYPE double
 #define RAND() drand48()
 #define PRINT(SRC, N, STRING) printDouble(SRC, N, STRING)
 
+*/
+
+/*------------------------------------ TYPE  LONG ---------------------------------*/
 
 
+/*
 #define TYPE long
 #define RAND() lrand48()
 #define PRINT(SRC, N, STRING) printLong(SRC, N, STRING)
+*/
 
+/*------------------------------------ TYPE INT ---------------------------------*/
 
+/*
 #define TYPE int
 #define RAND() rand()
 #define PRINT(SRC, N, STRING) printInt(SRC, N, STRING)
 */
+
+/*------------------------------------ TYPE String ---------------------------------*/
+
+
 
 #define TYPE char *
 #define PRINT(SRC, N, STRING) printString(SRC, N, STRING)
@@ -39,6 +54,11 @@ char * randString (void) {
     p[STRING_SIZE] = '\0';
     return p;
 }
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////
 /// Get wall clock time as a double
