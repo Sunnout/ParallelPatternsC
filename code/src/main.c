@@ -8,8 +8,37 @@
 #include "unit.h"
 #include "debug.h"
 
+/*
 #define TYPE double
+#define RAND() drand48()
+#define PRINT(SRC, N, STRING) printDouble(SRC, N, STRING)
 
+
+
+#define TYPE long
+#define RAND() lrand48()
+#define PRINT(SRC, N, STRING) printLong(SRC, N, STRING)
+
+
+#define TYPE int
+#define RAND() rand()
+#define PRINT(SRC, N, STRING) printInt(SRC, N, STRING)
+*/
+
+#define TYPE char *
+#define PRINT(SRC, N, STRING) printString(SRC, N, STRING)
+#define RAND() randString()
+
+
+#define STRING_SIZE 20
+char * randString (void) {
+    char * p = malloc(STRING_SIZE+1);
+    for (int i=0; i < STRING_SIZE; i++) {
+        p[i] = lrand48()%('z'-'a'+1)+'a';
+    }
+    p[STRING_SIZE] = '\0';
+    return p;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 /// Get wall clock time as a double
@@ -24,13 +53,16 @@ double wctime () {
 
 int main(int argc, char* argv[]) {
     int i, N;
+    int validate = 0;
     
 
     int c;
-    while ((c = getopt (argc, argv, "d")) != -1)
+    while ((c = getopt (argc, argv, "dv")) != -1)
     switch (c) {
         case 'd':
             debug = 1; break;
+        case 'v':
+            validate = 1; break;
         default:
             printf("Invalid option\n");
             abort ();
@@ -48,26 +80,42 @@ int main(int argc, char* argv[]) {
 
     N = atol(argv[0]);
 
-
-    printf ("Initializing SRC array\n");
-    TYPE *src = malloc (sizeof(*src) * N);
-    for (i = 0; i < N; i++)
-        src[i] = drand48();
-    printf ("Done!\n");
-    
-    printDouble (src, N, "SRC");
-    if (debug)
-        printf ("\n\n");
-
-    for (int i = 0;  i < nTestFunction;  i++) {
-        double start = wctime();
-        testFunction[i] (src, N, sizeof(*src));
-        double end = wctime();
-        printf ("%s:\t%6.3lf seconds\n", testNames[i], end-start);
+    if(validate) {
+        printf ("Initializing SRC array\n");
+        TYPE *src = malloc (sizeof(*src) * N);
+        for (i = 0; i < N; i++)
+            src[i] = RAND();
+        printf ("Done!\n");
+        
+        PRINT(src, N, "SRC");
+        
+        for (int i = 0;  i < nValidateFunction;  i++) {
+            validateFunction[i] (src, N, sizeof(*src));
+            printf ("\n");
+        }
+        free (src);
+    } else {
+        printf ("Initializing SRC array\n");
+        TYPE *src = malloc (sizeof(*src) * N);
+        for (i = 0; i < N; i++)
+            src[i] = RAND();
+        printf ("Done!\n");
+        
+        PRINT(src, N, "SRC");
         if (debug)
             printf ("\n\n");
-    }
 
-    free (src);
+        for (int i = 0;  i < nTestFunction;  i++) {
+            double start = wctime();
+            testFunction[i] (src, N, sizeof(*src));
+            double end = wctime();
+            printf ("%s:\t%6.3lf seconds\n", testNames[i], end-start);
+            if (debug)
+                printf ("\n\n");
+        }
+
+        free (src);
+    }
+    
     return 0;
 }

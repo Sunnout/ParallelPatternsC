@@ -7,9 +7,38 @@
 #include "debug.h"
 #include "unit.h"
 
-
+/*
 #define TYPE double
+#define PRINT(SRC, N, STRING) printDouble(SRC, N, STRING)
 #define FMT "%lf"
+
+
+#define TYPE long
+#define PRINT(SRC, N, STRING) printLong(SRC, N, STRING)
+#define FMT "%ld"
+
+
+#define TYPE int
+#define PRINT(SRC, N, STRING) printInt(SRC, N, STRING)
+#define FMT "%d"
+
+int TYPE_compare(const void* a, const void* b) {
+    TYPE v1 = *(TYPE *)a;
+    TYPE v2 = *(TYPE *)b;
+
+    return v1 == v2;
+}
+*/
+
+#define TYPE char *
+#define PRINT(SRC, N, STRING) printString(SRC, N, STRING)
+#define FMT "%s"
+
+int TYPE_compare(const void* a, const void* b) {
+    const char *a1 = *(char **)a;
+    const char *b1 = *(char **)b;
+    return strcmp (a1, b1);
+}
 
 
 //=======================================================
@@ -155,7 +184,7 @@ void validatePack (void *src, size_t n, size_t size) {
     if ( newN != valN)
         error = 1;
         
-    for(int i = 0 ;  i < n  && !error;i++){
+    for(int i = 0 ;  i < nFilter  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
             printf("ERROR in PACK %d \n",i);
@@ -181,7 +210,7 @@ void validateGather (void *src, size_t n, size_t size) {
 
     
     int error = 0;
-    for(int i = 0 ;  i < n  && !error;i++){
+    for(int i = 0 ;  i < nFilter  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
             printf("ERROR in GATHER %d \n",i);
@@ -207,8 +236,8 @@ void validateScatter (void *src, size_t n, size_t size) {
 
     
     int error = 0;
-    for(int i = 0 ;  i < n  && !error;i++){
-        if ( seq_dest[i] != dest[i]){
+    for(int i = 0 ;  i < nDest  && !error;i++){
+        if (seq_dest[i] != dest[i]){
             error = 1;
             printf("ERROR in SCATTER %d \n",i);
         }
@@ -294,8 +323,6 @@ char *validateNames[] = {
 };
 
 
-
-
 int nValidateFunction = sizeof (validateFunction)/sizeof(validateFunction[0]);
 
 
@@ -309,21 +336,21 @@ int nValidateFunction = sizeof (validateFunction)/sizeof(validateFunction[0]);
 void testMap (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
     map (dest, src, n, size, workerAddOne);
-    printDouble (dest, n, __FUNCTION__);
+    PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
 
 void testReduce (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (size);
     reduce (dest, src, n, size, workerAdd);
-    printDouble (dest, 1, __FUNCTION__);
+    PRINT (dest, 1, __FUNCTION__);
     free (dest);
 }
 
 void testScan (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
     scan (dest, src, n, size, workerAdd);
-    printDouble (dest, n, __FUNCTION__);
+    PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
 
@@ -335,7 +362,7 @@ void testPack (void *src, size_t n, size_t size) {
         filter[i] = (i == 0 || i == n/2 || i == n-1);
     int newN = pack (dest, src, n, size, filter);    
     printInt (filter, n, "filter");    
-    printDouble (dest, newN, __FUNCTION__);
+    PRINT (dest, newN, __FUNCTION__);
     free(filter);
     free (dest);
 }
@@ -348,7 +375,7 @@ void testGather (void *src, size_t n, size_t size) {
         filter[i] = rand() % n;
     printInt (filter, nFilter, "filter");    
     gather (dest, src, n, size, filter, nFilter);    
-    printDouble (dest, nFilter, __FUNCTION__);
+    PRINT (dest, nFilter, __FUNCTION__);
     free (dest);
 }
 
@@ -361,7 +388,7 @@ void testScatter (void *src, size_t n, size_t size) {
         filter[i] = rand() % nDest;
     printInt (filter, n, "filter");    
     scatter (dest, src, n, size, filter);    
-    printDouble (dest, nDest, __FUNCTION__);
+    PRINT (dest, nDest, __FUNCTION__);
     free(filter);
     free (dest);
 }
@@ -375,14 +402,14 @@ void testPipeline (void *src, size_t n, size_t size) {
     int nPipelineFunction = sizeof (pipelineFunction)/sizeof(pipelineFunction[0]);
     TYPE *dest = malloc (n * size);
     pipeline (dest, src, n, size, pipelineFunction, nPipelineFunction);
-    printDouble (dest, n, __FUNCTION__);    
+    PRINT (dest, n, __FUNCTION__);    
     free (dest);
 }
 
 void testFarm (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
     farm (dest, src, n, size, workerBig, 3);
-    printDouble (dest, n, __FUNCTION__);
+    PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
 
