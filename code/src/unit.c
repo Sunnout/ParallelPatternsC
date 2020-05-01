@@ -7,17 +7,45 @@
 #include "debug.h"
 #include "unit.h"
 
-/*
+//=======================================================
+// TYPE DOUBLE
+//=======================================================
+
+
 #define TYPE double
 #define PRINT(SRC, N, STRING) printDouble(SRC, N, STRING)
 #define FMT "%lf"
 
+int TYPE_compare(const void* a, const void* b) {
+    TYPE v1 = *(TYPE *)a;
+    TYPE v2 = *(TYPE *)b;
 
+    return v1 == v2;
+}
+
+
+//=======================================================
+// TYPE LONG
+//=======================================================
+
+/*
 #define TYPE long
 #define PRINT(SRC, N, STRING) printLong(SRC, N, STRING)
 #define FMT "%ld"
 
+int TYPE_compare(const void* a, const void* b) {
+    TYPE v1 = *(TYPE *)a;
+    TYPE v2 = *(TYPE *)b;
 
+    return v1 == v2;
+}
+*/
+
+//=======================================================
+// TYPE INT
+//=======================================================
+
+/*
 #define TYPE int
 #define PRINT(SRC, N, STRING) printInt(SRC, N, STRING)
 #define FMT "%d"
@@ -30,6 +58,11 @@ int TYPE_compare(const void* a, const void* b) {
 }
 */
 
+//=======================================================
+// TYPE STRING
+//=======================================================
+
+/*
 #define TYPE char *
 #define PRINT(SRC, N, STRING) printString(SRC, N, STRING)
 #define FMT "%s"
@@ -39,6 +72,8 @@ int TYPE_compare(const void* a, const void* b) {
     const char *b1 = *(char **)b;
     return strcmp (a1, b1);
 }
+
+*/
 
 
 //=======================================================
@@ -53,8 +88,6 @@ static void workerMax(void* a, const void* b, const void* c) {
         *(TYPE *)a = *(TYPE *)c;
 }
 
-
-
 static void workerMin(void* a, const void* b, const void* c) {
     // a = min (b, c)
     *(TYPE *)a = *(TYPE *)b;
@@ -66,14 +99,12 @@ static void workerSubtract(void* a, const void* b, const void* c) {
     *(TYPE *)a = *(TYPE *)b - *(TYPE *)c;
 }
 
-
-
 static void workerMultiply(void* a, const void* b, const void* c) {
     // a = b * c
     *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
 }
-
 */
+
 static void workerAdd(void* a, const void* b, const void* c) {
     // a = b + c
     *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
@@ -95,15 +126,36 @@ static void workerDivTwo(void* a, const void* b) {
     *(TYPE *)a = *(TYPE *)b / 2;
 }
 
+/*
 static void workerBig(void* a, const void* b) {
     for(int i = 0; i < 1000000; i++){;}
      *(TYPE *)a = *(TYPE *)b + 1;
 }
+*/
+
+
+/*
+static void workerConcat(void* a, const void* b) {
+    // a = a concat b
+    *(TYPE *)a = realloc(*(TYPE *)a, strlen(*(TYPE *)a) + strlen(*(TYPE *)b));
+    strcat(*(TYPE *)a, *(TYPE *)b);
+}
+
+static void workerReplaceFirstWithX(void* a, const void* b) {
+    // replaces first char with x
+
+    strcpy((TYPE) a, (TYPE) b);
+    ((TYPE) a)[0] = "x";
+ 
+    printf ("STRING FINAL: %s\n ", (TYPE )a);
+}
+*/
+
+
+
 //=======================================================
 // Validating testing funtions
 //=======================================================
-
-
 
 
 void validateMap (void *src, size_t n, size_t size) {
@@ -115,15 +167,15 @@ void validateMap (void *src, size_t n, size_t size) {
     
     int error = 0;
     for(int i = 0 ;  i < n  && !error;i++){
-        if ( seq_dest[i] != dest[i]){
+        //if (strcmp(seq_dest[i], dest[i]) != 0){
+        if (seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in MAP %d \n",i);
+            printf("ERROR in MAP %d \n", i);
         }
     }
 
     free (dest);
     free(seq_dest);
-
 }
 
 void validateReduce (void *src, size_t n, size_t size) {
@@ -165,7 +217,6 @@ void validateScan (void *src, size_t n, size_t size) {
 
     free (dest);
     free(seq_dest);
-
 }
 
 
@@ -252,8 +303,7 @@ void validatePipeline (void *src, size_t n, size_t size) {
     void (*pipelineFunction[])(void*, const void*) = {
         workerMultTwo,
         workerAddOne,
-        workerDivTwo
-    };
+        workerDivTwo    };
     int nPipelineFunction = sizeof (pipelineFunction)/sizeof(pipelineFunction[0]);
     TYPE *dest = malloc (n * size);
     TYPE *seq_dest = malloc (n * size);
@@ -277,13 +327,11 @@ void validatePipeline (void *src, size_t n, size_t size) {
 
 void validateFarm (void *src, size_t n, size_t size) {
     
-    
-    
     TYPE *seq_dest = malloc (n * size);
-    seq_farm (seq_dest, src, n, size, workerBig, 3);
+    seq_farm (seq_dest, src, n, size, workerAddOne, 3);
 
     TYPE *dest = malloc (n * size);
-    farm (dest, src, n, size, workerBig, 3);
+    farm (dest, src, n, size, workerAddOne, 3);
     
     int error = 0;
     for(int i = 0 ;  i < n  && !error;i++){
@@ -324,7 +372,6 @@ char *validateNames[] = {
 
 
 int nValidateFunction = sizeof (validateFunction)/sizeof(validateFunction[0]);
-
 
 
 
@@ -408,7 +455,7 @@ void testPipeline (void *src, size_t n, size_t size) {
 
 void testFarm (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
-    farm (dest, src, n, size, workerBig, 3);
+    farm (dest, src, n, size, workerAddOne, 3);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
