@@ -1,5 +1,5 @@
-#ifndef __PATTERNS_H
-#define __PATTERNS_H
+#ifndef __SEQ_PATTERNS_H
+#define __SEQ_PATTERNS_H
 
 
 void seq_map (

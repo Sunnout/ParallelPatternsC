@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "patterns.h"
+#include <stdio.h>
 #include "seq_patterns.h"
 #include "debug.h"
 #include "unit.h"
@@ -96,32 +97,200 @@ void validateMap (void *src, size_t n, size_t size) {
 
 }
 
+void validateReduce (void *src, size_t n, size_t size) {
+    TYPE *seq_dest = malloc (n * size);
+    seq_reduce (seq_dest, src, n, size, workerAdd);
 
 
+    TYPE *dest = malloc (n * size);
+    reduce (dest, src, n, size, workerAdd);
+    
+    int error = 0;
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in REDUCE %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest);
+}
+
+
+void validateScan (void *src, size_t n, size_t size) {
+    TYPE *seq_dest = malloc (n * size);
+    seq_scan (seq_dest, src, n, size, workerAdd);
+
+
+    TYPE *dest = malloc (n * size);
+    scan (dest, src, n, size, workerAdd);
+    
+    int error = 0;
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in SCAN %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest);
+
+}
+
+
+void validatePack (void *src, size_t n, size_t size) {
+    int nFilter = 3;
+    TYPE *dest = malloc (nFilter * size);
+    TYPE *seq_dest = malloc (nFilter * size);
+    int *filter = calloc(n,sizeof(*filter));
+    for (int i = 0;  i < n;  i++)
+        filter[i] = (i == 0 || i == n/2 || i == n-1);
+
+    int newN = pack (dest, src, n, size, filter);    
+    int valN = seq_pack(seq_dest, src, n, size, filter);   
+    
+    int error = 0;
+    if ( newN != valN)
+        error = 1;
+        
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in PACK %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest); 
+    free(filter);
+}
+
+
+void validateGather (void *src, size_t n, size_t size) {
+    int nFilter = 3;
+    TYPE *dest = malloc (nFilter * size);
+    TYPE *seq_dest = malloc (nFilter * size);
+    int filter[nFilter];
+    for (int i = 0;  i < nFilter;  i++)
+        filter[i] = rand() % n;
+
+    gather (dest, src, n, size, filter, nFilter);    
+    seq_gather (seq_dest, src, n, size, filter, nFilter);    
+
+    
+    int error = 0;
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in GATHER %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest);
+}
+
+void validateScatter (void *src, size_t n, size_t size) {
+    int nDest = 6;
+    TYPE *dest = malloc (nDest * size);
+    TYPE *seq_dest = malloc (nDest * size);
+    memset (dest, 0, nDest * size);
+    memset (seq_dest, 0, nDest * size);
+    int *filter = calloc(n,sizeof(*filter));
+    for (int i = 0;  i < n;  i++)
+        filter[i] = rand() % nDest;
+
+    scatter (dest, src, n, size, filter);    
+    seq_scatter (seq_dest, src, n, size, filter);    
+
+    
+    int error = 0;
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in SCATTER %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest);
+    free(filter);
+}
+
+void validatePipeline (void *src, size_t n, size_t size) {
+    void (*pipelineFunction[])(void*, const void*) = {
+        workerMultTwo,
+        workerAddOne,
+        workerDivTwo
+    };
+    int nPipelineFunction = sizeof (pipelineFunction)/sizeof(pipelineFunction[0]);
+    TYPE *dest = malloc (n * size);
+    TYPE *seq_dest = malloc (n * size);
+    pipeline (dest, src, n, size, pipelineFunction, nPipelineFunction);
+    seq_pipeline (seq_dest, src, n, size, pipelineFunction, nPipelineFunction);
+
+
+
+    int error = 0;
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in PipeLine %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest);
+}
+
+
+void validateFarm (void *src, size_t n, size_t size) {
+    
+    
+    
+    TYPE *seq_dest = malloc (n * size);
+    seq_farm (seq_dest, src, n, size, workerBig, 3);
+
+    TYPE *dest = malloc (n * size);
+    farm (dest, src, n, size, workerBig, 3);
+    
+    int error = 0;
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in FARM %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest);
+}
 
 
 typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
 
 VALIDATEFUNCTION validateFunction[] = {
     validateMap,
-    testReduce,
-    testScan,
-    testPack,
-    testGather,
-    testScatter,
-    testPipeline,
-    testFarm,
+    validateReduce,
+    validateScan,
+    validatePack,
+    validateGather,
+    validateScatter,
+    validatePipeline,
+    validateFarm,
 };
 
 char *validateNames[] = {
     "validateMap",
-    "testReduce",
-    "testScan",
-    "testPack",
-    "testGather",
-    "testScatter",
-    "testPipeline",
-    "testFarm",
+    "validateReduce",
+    "validateScan",
+    "validatePack",
+    "validateGather",
+    "validateScatter",
+    "validatePipeline",
+    "validateFarm",
 };
 
 
