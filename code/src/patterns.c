@@ -1,8 +1,8 @@
 #include <string.h>
 #include <assert.h>
-#include <omp.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <omp.h>
 #include "patterns.h"
 
 
@@ -13,11 +13,11 @@ void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
-    char *d = (char *) dest;
-    char *s = (char *) src;
+    char * d = (char *) dest;
+    char * s = (char *) src;
 
     #pragma omp parallel for
-    for (int i = 0;  i < nJob;  i++) {
+    for (int i = 0; i < nJob; i++) {
         worker (&d[i * sizeJob], &s[i * sizeJob]);
     }
 }
@@ -30,8 +30,8 @@ void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(
     assert (dest != NULL);
     assert (src != NULL);
     assert (worker != NULL);
-    char *d = (char *) dest;
-    char *s = (char *) src;
+    char * d = (char *) dest;
+    char * s = (char *) src;
     int threadNum;
     char * privDest;
 
@@ -102,7 +102,7 @@ TreeNode getRightChild(TreeNode * tree, int parent) {
 
 
 void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, size_t nJob,size_t nPow, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
-    char * s = (char *)src;
+    char * s = (char *) src;
 
     if(current >= nPow-1) {
         TreeNode node;
@@ -118,12 +118,12 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
         //Create left child
         #pragma omp task
         {
-            createTreeNode(tree, 2*current+1, min, split, src, nJob,nPow, sizeJob, worker);
+            createTreeNode(tree, 2*current+1, min, split, src, nJob, nPow, sizeJob, worker);
         }
         //Create right child
         #pragma omp task
         {
-            createTreeNode(tree, 2*current+2, split, max, src, nJob,nPow, sizeJob, worker);
+            createTreeNode(tree, 2*current+2, split, max, src, nJob, nPow, sizeJob, worker);
         }
         #pragma omp taskwait
 
@@ -147,7 +147,7 @@ TreeNode * buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
     #pragma omp parallel 
     {
     #pragma omp single
-    createTreeNode(tree, 0, 0, nextPow2, src,nJob, nextPow2, sizeJob, worker);
+    createTreeNode(tree, 0, 0, nextPow2, src, nJob, nextPow2, sizeJob, worker);
     }
     return tree;
 }
@@ -161,7 +161,7 @@ void updateTreeNode (TreeNode * tree, int current,size_t nJob, size_t sizeJob, v
     memcpy(leftChild.fromLeft, currentNode.fromLeft, sizeJob);
     worker(rightChild.fromLeft, leftChild.sum, currentNode.fromLeft);
 
-    if( current*2+1 < nJob-1 || current*2+2 < nJob-1 ){
+    if(current*2+1 < nJob-1 || current*2+2 < nJob-1){
         #pragma omp task
         {
             updateTreeNode(tree, current*2+1, nJob, sizeJob, src, dest, worker);
@@ -174,9 +174,9 @@ void updateTreeNode (TreeNode * tree, int current,size_t nJob, size_t sizeJob, v
 }
 
 
-void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src , void * dest, void (*worker)(void *v1, const void *v2, const void *v3)) {
     size_t nextPow2 = nextPower_2(nJob);
- #pragma omp parallel 
+    #pragma omp parallel 
     {
     #pragma omp single
     updateTreeNode(tree, 0, nextPow2, sizeJob, src, dest, worker);
@@ -189,8 +189,8 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     assert (src != NULL);
     assert (worker != NULL);
 
-    char *s = (char *) src;
-    char *d = (char *) dest;
+    char * s = (char *) src;
+    char * d = (char *) dest;
 
     TreeNode * tree = buildTree (src, nJob, sizeJob, worker);
     traverseTree (tree, nJob, sizeJob, src, dest, worker);
@@ -203,7 +203,6 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
         int j = nNodes + i;
         worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
     } 
-
     free(tree);
 }
 
@@ -223,9 +222,9 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
     assert (filter != NULL);
     assert (nJob >= 0);
     assert (sizeJob > 0);
-    char * d = (char *)dest;
-    char * s = (char *)src;
-    void * f = (void *)filter;
+    char * d = (char *) dest;
+    char * s = (char *) src;
+    void * f = (void *) filter;
 
     void * parallel_preffix = calloc(1, nJob * sizeof(int));
     scan(parallel_preffix, f, nJob, sizeof(int), workerPreffixSum);
@@ -253,8 +252,8 @@ void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filt
     assert (nJob >= 0);
     assert (sizeJob > 0);
     assert (nFilter >= 0);
-    char *d = (char *) dest;
-    char *s = (char *) src;
+    char * d = (char *) dest;
+    char * s = (char *) src;
 
     #pragma omp parallel for
     for (int i=0; i < nFilter; i++) {
@@ -276,8 +275,8 @@ void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *fil
     assert (filter != NULL);
     assert (nJob >= 0);
     assert (sizeJob > 0);
-    char *d = (char *) dest;
-    char *s = (char *) src;
+    char * d = (char *) dest;
+    char * s = (char *) src;
 
     #pragma omp parallel for
     for (int i=0; i < nJob; i++) {
@@ -296,8 +295,8 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
     assert (workerList != NULL);
     assert (nJob >= 0);
     assert (sizeJob > 0);
-    char *d =(char *) dest;
-    char *s =(char *) src;
+    char * d =(char *) dest;
+    char * s =(char *) src;
 
     // Number of antidiagonals
     int nAntiDiagonal = nWorkers + nJob - 1;
@@ -357,26 +356,26 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     assert (src != NULL);
     assert (worker != NULL);
     assert (nWorkers >= 0);
-    char *d = (char *) dest;
-    char *s = (char *) src;
+    char * d = (char *) dest;
+    char * s = (char *) src;
 
-    int * flagWorkers = calloc(1,nWorkers*sizeof(int));
+    int * flagWorkers = calloc(1, nWorkers*sizeof(int));
     int finished = 0;
 
     #pragma omp parallel shared(flagWorkers)
     {
-        #pragma omp master 
+        #pragma omp master
         { 
-            while( finished < nJob) {
-                for(int j = 0; j <nWorkers ; j++ ){
-                    if ( flagWorkers[j] == 0){
+            while(finished < nJob) {
+                for(int j = 0; j < nWorkers && finished < nJob; j++){
+                    if (!flagWorkers[j]){
                         flagWorkers[j] = 1; 
                         #pragma omp task
                         {
                             worker (&d[finished * sizeJob], &s[finished * sizeJob]);
                             flagWorkers[j] = 0; 
                         }
-                        finished ++;
+                        finished++;
                     }
                 }
             }
