@@ -184,7 +184,7 @@ static void workerReplaceFirstWithX(void* a, const void* b) {
 
 
 //=======================================================
-// Validating testing funtions
+// Validating funtions
 //=======================================================
 
 
@@ -197,7 +197,6 @@ void validateMap (void *src, size_t n, size_t size) {
     
     int error = 0;
     for(int i = 0 ;  i < n  && !error;i++){
-        //if (strcmp(seq_dest[i], dest[i]) != 0){
         if (seq_dest[i] != dest[i]){
             error = 1;
             printf("ERROR in MAP %d \n", i);
@@ -228,7 +227,6 @@ void validateReduce (void *src, size_t n, size_t size) {
     free(seq_dest);
 }
 
-
 void validateScan (void *src, size_t n, size_t size) {
     TYPE *seq_dest = malloc (n * size);
     seq_scan (seq_dest, src, n, size, workerAdd);
@@ -248,7 +246,6 @@ void validateScan (void *src, size_t n, size_t size) {
     free (dest);
     free(seq_dest);
 }
-
 
 void validatePack (void *src, size_t n, size_t size) {
     int nFilter = 3;
@@ -276,7 +273,6 @@ void validatePack (void *src, size_t n, size_t size) {
     free(seq_dest); 
     free(filter);
 }
-
 
 void validateGather (void *src, size_t n, size_t size) {
     int nFilter = 3;
@@ -354,7 +350,6 @@ void validatePipeline (void *src, size_t n, size_t size) {
     free(seq_dest);
 }
 
-
 void validateFarm (void *src, size_t n, size_t size) {
     
     TYPE *seq_dest = malloc (n * size);
@@ -374,7 +369,6 @@ void validateFarm (void *src, size_t n, size_t size) {
     free (dest);
     free(seq_dest);
 }
-
 
 typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
 
@@ -400,9 +394,7 @@ char *validateNames[] = {
     "validateFarm",
 };
 
-
 int nValidateFunction = sizeof (validateFunction)/sizeof(validateFunction[0]);
-
 
 
 
@@ -412,7 +404,7 @@ int nValidateFunction = sizeof (validateFunction)/sizeof(validateFunction[0]);
 
 void testMap (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
-    map (dest, src, n, size, workerCountPrime);
+    map (dest, src, n, size, workerAddOne);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
