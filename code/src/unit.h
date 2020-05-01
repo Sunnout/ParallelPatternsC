@@ -9,4 +9,13 @@ extern char *testNames[];
 
 extern int nTestFunction;
 
+
+typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
+
+extern VALIDATEFUNCTION validateFunction[];
+
+extern char *validateNames[];
+
+extern int nValidateFunction;
+
 #endif

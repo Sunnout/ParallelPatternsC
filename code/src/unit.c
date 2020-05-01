@@ -2,8 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "patterns.h"
-
-#include "patterns.h"
+#include "seq_patterns.h"
 #include "debug.h"
 #include "unit.h"
 
@@ -23,35 +22,33 @@ static void workerMax(void* a, const void* b, const void* c) {
     if (*(TYPE *)c > *(TYPE *)a)
         *(TYPE *)a = *(TYPE *)c;
 }
-*/
 
-/*
+
+
 static void workerMin(void* a, const void* b, const void* c) {
     // a = min (b, c)
     *(TYPE *)a = *(TYPE *)b;
     if (*(TYPE *)c < *(TYPE *)a)
         *(TYPE *)a = *(TYPE *)c;
 }
-*/
+static void workerSubtract(void* a, const void* b, const void* c) {
+    // a = n - c
+    *(TYPE *)a = *(TYPE *)b - *(TYPE *)c;
+}
 
+
+
+static void workerMultiply(void* a, const void* b, const void* c) {
+    // a = b * c
+    *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
+}
+
+*/
 static void workerAdd(void* a, const void* b, const void* c) {
     // a = b + c
     *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
 }
 
-/*
-static void workerSubtract(void* a, const void* b, const void* c) {
-    // a = n - c
-    *(TYPE *)a = *(TYPE *)b - *(TYPE *)c;
-}
-*/
-
-/*
-static void workerMultiply(void* a, const void* b, const void* c) {
-    // a = b * c
-    *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
-}
-*/
 
 static void workerAddOne(void* a, const void* b) {
     // a = b + 1
@@ -72,6 +69,68 @@ static void workerBig(void* a, const void* b) {
     for(int i = 0; i < 1000000; i++){;}
      *(TYPE *)a = *(TYPE *)b + 1;
 }
+//=======================================================
+// Validating testing funtions
+//=======================================================
+
+
+
+
+void validateMap (void *src, size_t n, size_t size) {
+    TYPE *seq_dest = malloc (n * size);
+    seq_map (seq_dest, src, n, size, workerAddOne);
+
+    TYPE *dest = malloc (n * size);
+    map (dest, src, n, size, workerAddOne);
+    
+    int error = 0;
+    for(int i = 0 ;  i < n  && !error;i++){
+        if ( seq_dest[i] != dest[i]){
+            error = 1;
+            printf("ERROR in MAP %d \n",i);
+        }
+    }
+
+    free (dest);
+    free(seq_dest);
+
+}
+
+
+
+
+
+typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
+
+VALIDATEFUNCTION validateFunction[] = {
+    validateMap,
+    testReduce,
+    testScan,
+    testPack,
+    testGather,
+    testScatter,
+    testPipeline,
+    testFarm,
+};
+
+char *validateNames[] = {
+    "validateMap",
+    "testReduce",
+    "testScan",
+    "testPack",
+    "testGather",
+    "testScatter",
+    "testPipeline",
+    "testFarm",
+};
+
+
+
+
+int nValidateFunction = sizeof (validateFunction)/sizeof(validateFunction[0]);
+
+
+
 
 
 //=======================================================
@@ -187,6 +246,9 @@ char *testNames[] = {
     "testPipeline",
     "testFarm",
 };
+
+
+
 
 int nTestFunction = sizeof (testFunction)/sizeof(testFunction[0]);
 
