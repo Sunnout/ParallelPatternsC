@@ -243,6 +243,10 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
     char * bitsum = (char *) parallel_preffix;
     int res = bitsum[(nJob-1)*sizeof(int)];
 
+    for ( int j=0 ; j < nJob ;j++){
+        printf("bitsum[%d] = %d \n", j, bitsum[j*sizeof(int)]);
+    }
+    
     #pragma omp parallel for
     for (int i=0; i < nJob; i++) {
         if (filter[i]) {

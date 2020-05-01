@@ -444,6 +444,62 @@ void testPack (void *src, size_t n, size_t size) {
     free (dest);
 }
 
+/*
+Testing Pack with Filter with only 1
+*/
+void testPackBigFilter (void *src, size_t n, size_t size) {
+    int nFilter = n;
+    TYPE *dest = malloc (nFilter * size);
+    int *filter = calloc(n,sizeof(*filter));
+    for (int i = 0;  i < n;  i++)
+        filter[i] = 1;
+    int newN = pack (dest, src, n, size, filter);    
+    printInt (filter, n, "filter");    
+    PRINT (dest, newN, __FUNCTION__);
+    free(filter);
+    free (dest);
+}
+
+
+/*
+Testing Pack with intermediate Filter with intermediate  ex: [0,1,0,1...] 
+*/
+void testPackMedFilter (void *src, size_t n, size_t size) {
+    int nFilter = n/2;
+    TYPE *dest = malloc (nFilter * size);
+    int *filter = calloc(n,sizeof(*filter));
+    for (int i = 0;  i < n;  i++)
+        filter[i] = (i%2);
+    int newN = pack (dest, src, n, size, filter);    
+    printInt (filter, n, "filter");    
+    PRINT (dest, newN, __FUNCTION__);
+    free(filter);
+    free (dest);
+}
+
+/*
+Testing Pack with 1 together , ex : [1,1,1,1,0,0,0,0...]
+*/
+void testPackUnbalancedFilter (void *src, size_t n, size_t size) {
+    int nFilter = n/2;
+    TYPE *dest = malloc (nFilter * size);
+    int *filter = calloc(n,sizeof(*filter));
+    for (int i = 0;  i < n;  i++){
+        if(i < (n/2)){
+            filter[i] = 1;
+        }
+        else{
+            filter[i]=0;
+        }
+    }    
+    int newN = pack (dest, src, n, size, filter);    
+    printInt (filter, n, "filter");    
+    PRINT (dest, newN, __FUNCTION__);
+    free(filter);
+    free (dest);
+}
+
+
 void testGather (void *src, size_t n, size_t size) {
     int nFilter = 3;
     TYPE *dest = malloc (nFilter * size);
@@ -3964,16 +4020,15 @@ void testFarm (void *src, size_t n, size_t size) {
 
 typedef void (*TESTFUNCTION)(void *, size_t, size_t);
 
+/*
 TESTFUNCTION testFunction[] = {
     testMap,
     testReduce,
     testScan,
-    testPack,
+    testPackBigFilter,
     testGather,
     testScatter,
     testPipeline,
-    testPipeLineHugeWorkersLowNumbers,
-    testPipeLineSmallWorkersHugeNumbers,
     testFarm,
     
 };
@@ -3982,17 +4037,22 @@ char *testNames[] = {
     "testMap",
     "testReduce",
     "testScan",
-    "testPack",
+    "testPackBigFilter",
     "testGather",
     "testScatter",
     "testPipeline",
-    "testPipeLineHugeWorkersLowNumbers",
-    "testPipeLineSmallWorkersHugeNumbers",  
     "testFarm",
 };
 
+*/
 
+TESTFUNCTION testFunction[] = {
+    testPackBigFilter,
+};
 
+char *testNames[] = {
+    "testPackBigFilter",
+};
 
 int nTestFunction = sizeof (testFunction)/sizeof(testFunction[0]);
 
