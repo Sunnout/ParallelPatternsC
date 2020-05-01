@@ -153,7 +153,7 @@ TreeNode * buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
 }
 
 
-void updateTreeNode (TreeNode * tree, int current,size_t nJob, size_t sizeJob, void* src ,void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+void updateTreeNode (TreeNode * tree, int current,size_t nJob, size_t sizeJob, void* src, void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
     TreeNode currentNode = tree[current];
     TreeNode leftChild = getLeftChild(tree, current);
     TreeNode rightChild = getRightChild(tree, current);
@@ -183,6 +183,15 @@ void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src , voi
     }
 }
 
+void freeTree (TreeNode * tree, int nNodes) {
+    for(int i = 0; i < nNodes; i++) {
+        TreeNode currentNode = tree[i];
+        free(currentNode.fromLeft);
+        free(currentNode.sum);
+    }
+    free(tree);
+}
+
 
 void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     assert (dest != NULL);
@@ -203,7 +212,9 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
         int j = nNodes + i;
         worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
     } 
-    free(tree);
+
+    freeTree(tree, nextPow2*2-1);
+    //free(tree);
 }
 
 
