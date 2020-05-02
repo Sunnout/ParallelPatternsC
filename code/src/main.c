@@ -130,6 +130,7 @@ int main(int argc, char* argv[]) {
 
     
     printf("Doing %d Tests\n", nTestFunction);
+    double TEST_TIME_START = wctime();
     for (int i = 0;  i < nTestFunction;  i++) {
         double start = wctime();
         testFunction[i] (src, N, sizeof(*src));
@@ -138,6 +139,8 @@ int main(int argc, char* argv[]) {
         if (debug)
             printf ("\n\n");
     }
+    double TEST_TIME_END = wctime();
+    printf ("%s:\t%8.3lf seconds\n", "Test Time", TEST_TIME_END-TEST_TIME_START);
 
     free (src);
     

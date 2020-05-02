@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <assert.h>
 #include <string.h>
 #include <unistd.h>
 #include "patterns.h"
@@ -80,6 +81,7 @@ int TYPE_compare(const void* a, const void* b) {
 #endif
 
 
+
 //=======================================================
 // Workers
 //=======================================================
@@ -103,17 +105,18 @@ static void workerSubtract(void* a, const void* b, const void* c) {
     *(TYPE *)a = *(TYPE *)b - *(TYPE *)c;
 }
 
+
+*/
+
 static void workerMultiply(void* a, const void* b, const void* c) {
     // a = b * c
     *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
 }
-*/
 
 static void workerAdd(void* a, const void* b, const void* c) {
     // a = b + c
     *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
 }
-
 
 static void workerAddOne(void* a, const void* b) {
     // a = b + 1
@@ -130,6 +133,17 @@ static void workerDivTwo(void* a, const void* b) {
     *(TYPE *)a = *(TYPE *)b / 2;
 }
 
+static void workerAddOneHeavy(void* a, const void* b) {
+    for(int i = 0; i < 1000000; i++){;}
+     *(TYPE *)a = *(TYPE *)b + 1;
+}
+
+static void workerAddHeavy(void* a, const void* b, const void* c) {
+    for(int i = 0; i < 1000000; i++){;}
+    *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
+}
+
+/*
 int isPrime(int n){
     if (n <= 1) 
         return 0; 
@@ -141,7 +155,7 @@ int isPrime(int n){
     return 1; 
 }
 
-static void workerCountPrime(void* a , const void* b ){
+static void workerCountPrime(void* a , const void* b){
     int k = *(TYPE *)b * 500;
     int res = 0;
     for ( int i = 0 ; i < k ; i++ ){
@@ -152,23 +166,10 @@ static void workerCountPrime(void* a , const void* b ){
     // a = b + c
     *(TYPE *)a = res;
 }
-
-static void workerAddOneGiant(void* a , const void* b ){
-        for (int i = 0 ; i < 1000;i++){;}
-
-        *(TYPE *)a = *(TYPE *)b + 1;
-
-}
-
-/*
-static void workerBig(void* a, const void* b) {
-    for(int i = 0; i < 1000000; i++){;}
-     *(TYPE *)a = *(TYPE *)b + 1;
-}
 */
 
 
-/*
+/* WORKERS FOR STRINGS -> NOT WORKING
 static void workerConcat(void* a, const void* b) {
     // a = a concat b
     *(TYPE *)a = realloc(*(TYPE *)a, strlen(*(TYPE *)a) + strlen(*(TYPE *)b));
@@ -370,6 +371,12 @@ void validateFarm (void *src, size_t n, size_t size) {
     free(seq_dest);
 }
 
+
+
+//=======================================================
+// List of validating functions
+//=======================================================
+
 typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
 
 VALIDATEFUNCTION validateFunction[] = {
@@ -402,48 +409,75 @@ int nValidateFunction = sizeof (validateFunction)/sizeof(validateFunction[0]);
 // Unit testing funtions
 //=======================================================
 
-void testMap (void *src, size_t n, size_t size) {
+/*
+Testing Map with light worker
+*/
+void testMapLightWorker (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
-    map (dest, src, n, size, workerAddOne);
+    map (dest, src, n, size, workerMultTwo);
     PRINT (dest, n, __FUNCTION__);
-    free (dest);
-}
-
-void testReduce (void *src, size_t n, size_t size) {
-    TYPE *dest = malloc (size);
-    reduce (dest, src, n, size, workerAdd);
-    PRINT (dest, 1, __FUNCTION__);
-    free (dest);
-}
-
-void testScan (void *src, size_t n, size_t size) {
-    TYPE *dest = malloc (n * size);
-    scan (dest, src, n, size, workerAdd);
-    PRINT (dest, n, __FUNCTION__);
-    free (dest);
-}
-
-void testPack (void *src, size_t n, size_t size) {
-    int nFilter = 3;
-    TYPE *dest = malloc (nFilter * size);
-    int *filter = calloc(n,sizeof(*filter));
-    for (int i = 0;  i < n;  i++)
-        filter[i] = (i == 0 || i == n/2 || i == n-1);
-    int newN = pack (dest, src, n, size, filter);    
-    printInt (filter, n, "filter");    
-    PRINT (dest, newN, __FUNCTION__);
-    free(filter);
     free (dest);
 }
 
 /*
-Testing Pack with Filter with only 1
+Testing Map with heavy worker
 */
-void testPackBigFilter (void *src, size_t n, size_t size) {
-    int nFilter = n;
+void testMapHeavyWorker (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    map (dest, src, n, size, workerAddOneHeavy);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Reduce with light worker
+*/
+void testReduceLightWorker (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (size);
+    reduce (dest, src, n, size, workerMultiply);
+    PRINT (dest, 1, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Reduce with heavy worker
+*/
+void testReduceHeavyWorker (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (size);
+    reduce (dest, src, n, size, workerAddHeavy);
+    PRINT (dest, 1, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Scan with light worker
+*/
+void testScanLightWorker (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    scan (dest, src, n, size, workerMultiply);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Scan with heavy worker
+*/
+void testScanHeavyWorker (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    scan (dest, src, n, size, workerAddHeavy);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Pack with small filter (10% of array size)
+*/
+void testPackSmallFilter (void *src, size_t n, size_t size) {
+    assert(n >= 10);
+    int nFilter = n * 0.1;
     TYPE *dest = malloc (nFilter * size);
     int *filter = calloc(n,sizeof(*filter));
-    for (int i = 0;  i < n;  i++)
+    for (int i = 0;  i < nFilter;  i++)
         filter[i] = 1;
     int newN = pack (dest, src, n, size, filter);    
     printInt (filter, n, "filter");    
@@ -452,11 +486,10 @@ void testPackBigFilter (void *src, size_t n, size_t size) {
     free (dest);
 }
 
-
 /*
-Testing Pack with intermediate Filter with intermediate  ex: [0,1,0,1...] 
+Testing Pack with medium filter (ex: [0,1,0,1...])
 */
-void testPackMedFilter (void *src, size_t n, size_t size) {
+void testPackMediumFilterAlternated (void *src, size_t n, size_t size) {
     int nFilter = n/2;
     TYPE *dest = malloc (nFilter * size);
     int *filter = calloc(n,sizeof(*filter));
@@ -472,18 +505,12 @@ void testPackMedFilter (void *src, size_t n, size_t size) {
 /*
 Testing Pack with 1 together , ex : [1,1,1,1,0,0,0,0...]
 */
-void testPackUnbalancedFilter (void *src, size_t n, size_t size) {
+void testPackMediumFilterPacked(void *src, size_t n, size_t size) {
     int nFilter = n/2;
     TYPE *dest = malloc (nFilter * size);
     int *filter = calloc(n,sizeof(*filter));
-    for (int i = 0;  i < n;  i++){
-        if(i < (n/2)){
-            filter[i] = 1;
-        }
-        else{
-            filter[i]=0;
-        }
-    }    
+    for (int i = 0;  i < nFilter;  i++)
+        filter[i] = 1;        
     int newN = pack (dest, src, n, size, filter);    
     printInt (filter, n, "filter");    
     PRINT (dest, newN, __FUNCTION__);
@@ -491,9 +518,28 @@ void testPackUnbalancedFilter (void *src, size_t n, size_t size) {
     free (dest);
 }
 
+/*
+Testing Pack with big filter (all 1's)
+*/
+void testPackBigFilter (void *src, size_t n, size_t size) {
+    int nFilter = n;
+    TYPE *dest = malloc (nFilter * size);
+    int *filter = calloc(n,sizeof(*filter));
+    for (int i = 0;  i < n;  i++)
+        filter[i] = 1;
+    int newN = pack (dest, src, n, size, filter);    
+    printInt (filter, n, "filter");    
+    PRINT (dest, newN, __FUNCTION__);
+    free(filter);
+    free (dest);
+}
 
-void testGather (void *src, size_t n, size_t size) {
-    int nFilter = 3;
+/*
+Testing Gather with small filter (10% of array size)
+*/
+void testGatherSmallFilter (void *src, size_t n, size_t size) {
+    assert(n >= 10);
+    int nFilter = n * 0.1;
     TYPE *dest = malloc (nFilter * size);
     int filter[nFilter];
     for (int i = 0;  i < nFilter;  i++)
@@ -504,8 +550,26 @@ void testGather (void *src, size_t n, size_t size) {
     free (dest);
 }
 
-void testScatter (void *src, size_t n, size_t size) {
-    int nDest = 6;
+/*
+Testing Gather with big filter (array size)
+*/
+void testGatherBigFilter (void *src, size_t n, size_t size) {
+    int nFilter = n;
+    TYPE *dest = malloc (nFilter * size);
+    int filter[nFilter];
+    for (int i = 0;  i < nFilter;  i++)
+        filter[i] = rand() % n;
+    printInt (filter, nFilter, "filter");    
+    gather (dest, src, n, size, filter, nFilter);    
+    PRINT (dest, nFilter, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Scatter with small filter (10% of array size)
+*/
+void testScatterSmallFilter (void *src, size_t n, size_t size) {
+    int nDest = n * 0.1;
     TYPE *dest = malloc (nDest * size);
     memset (dest, 0, nDest * size);
     int *filter = calloc(n,sizeof(*filter));
@@ -518,11 +582,15 @@ void testScatter (void *src, size_t n, size_t size) {
     free (dest);
 }
 
-void testPipeline (void *src, size_t n, size_t size) {
+/*
+Testing Pipeline with light workers and small number of stations
+*/
+void testPipelineLightWorkersSmallNumberOfStations (void *src, size_t n, size_t size) {
     void (*pipelineFunction[])(void*, const void*) = {
         workerMultTwo,
         workerAddOne,
-        workerDivTwo
+        workerDivTwo,
+        workerMultTwo,
     };
     int nPipelineFunction = sizeof (pipelineFunction)/sizeof(pipelineFunction[0]);
     TYPE *dest = malloc (n * size);
@@ -531,11 +599,15 @@ void testPipeline (void *src, size_t n, size_t size) {
     free (dest);
 }
 
-void testPipeLineHugeWorkersLowNumbers (void *src, size_t n, size_t size) {
+/*
+Testing Pipeline with heavy workers and small number of stations
+*/
+void testPipelineHeavyWorkersSmallNumberOfStations (void *src, size_t n, size_t size) {
     void (*pipelineFunction[])(void*, const void*) = {
-        workerCountPrime,
-        workerAddOneGiant,
-        workerAddOneGiant
+        workerAddOneHeavy,
+        workerAddOneHeavy,
+        workerAddOneHeavy,
+        workerAddOneHeavy,
     };
     int nPipelineFunction = sizeof (pipelineFunction)/sizeof(pipelineFunction[0]);
     TYPE *dest = malloc (n * size);
@@ -544,7 +616,10 @@ void testPipeLineHugeWorkersLowNumbers (void *src, size_t n, size_t size) {
     free (dest);
 }
 
-void testPipeLineSmallWorkersHugeNumbers (void *src, size_t n, size_t size) {
+/*
+Testing Pipeline with light workers and large number of stations
+*/
+void testPipelineLightWorkersLargeNumberOfStations (void *src, size_t n, size_t size) {
     void (*pipelineFunction[])(void*, const void*) = {
         workerMultTwo,
         workerAddOne,
@@ -3997,12 +4072,66 @@ void testPipeLineSmallWorkersHugeNumbers (void *src, size_t n, size_t size) {
     free (dest);
 }
 
-void testFarm (void *src, size_t n, size_t size) {
+/*
+Testing Farm with light worker and small number of workers
+*/
+void testFarmLightWorkerSmallNumberOfWorkers (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
-    farm (dest, src, n, size, workerAddOne, 3);
+    farm (dest, src, n, size, workerDivTwo, 2);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
+
+/*
+Testing Farm with light worker and medium number of workers
+*/
+void testFarmLightWorkerMediumNumberOfWorkers (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    farm (dest, src, n, size, workerDivTwo, 4);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Farm with light worker and large number of workers
+*/
+void testFarmLightWorkerLargeNumberOfWorkers (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    farm (dest, src, n, size, workerDivTwo, 16);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Farm with heavy worker and small number of workers
+*/
+void testFarmHeavyWorkerSmallNumberOfWorkers (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    farm (dest, src, n, size, workerAddOneHeavy, 2);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Farm with heavy worker and medium number of workers
+*/
+void testFarmHeavyWorkerMediumNumberOfWorkers (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    farm (dest, src, n, size, workerAddOneHeavy, 4);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
+/*
+Testing Farm with heavy worker and large number of workers
+*/
+void testFarmHeavyWorkerLargeNumberOfWorkers (void *src, size_t n, size_t size) {
+    TYPE *dest = malloc (n * size);
+    farm (dest, src, n, size, workerAddOneHeavy, 16);
+    PRINT (dest, n, __FUNCTION__);
+    free (dest);
+}
+
 
 
 //=======================================================
@@ -4014,26 +4143,54 @@ typedef void (*TESTFUNCTION)(void *, size_t, size_t);
 
 
 TESTFUNCTION testFunction[] = {
-    testMap,
-    testReduce,
-    testScan,
+    testMapLightWorker,
+    testMapHeavyWorker,
+    testReduceLightWorker,
+    testReduceHeavyWorker,
+    testScanLightWorker,
+    testScanHeavyWorker,
+    testPackSmallFilter,
+    testPackMediumFilterAlternated,
+    testPackMediumFilterPacked,
     testPackBigFilter,
-    testGather,
-    testScatter,
-    testPipeline,
-    testFarm,
+    testGatherSmallFilter,
+    testGatherBigFilter,
+    testScatterSmallFilter,
+    testPipelineLightWorkersSmallNumberOfStations,
+    testPipelineHeavyWorkersSmallNumberOfStations,
+    testPipelineLightWorkersLargeNumberOfStations,
+    testFarmLightWorkerSmallNumberOfWorkers,
+    testFarmLightWorkerMediumNumberOfWorkers,
+    testFarmLightWorkerLargeNumberOfWorkers,
+    testFarmHeavyWorkerSmallNumberOfWorkers,
+    testFarmHeavyWorkerMediumNumberOfWorkers,
+    testFarmHeavyWorkerLargeNumberOfWorkers
     
 };
 
 char *testNames[] = {
-    "testMap",
-    "testReduce",
-    "testScan",
+    "testMapLightWorker",
+    "testMapHeavyWorker",
+    "testReduceLightWorker",
+    "testReduceHeavyWorker",
+    "testScanLightWorker",
+    "testScanHeavyWorker",
+    "testPackSmallFilter",
+    "testPackMediumFilterAlternated",
+    "testPackMediumFilterPacked",
     "testPackBigFilter",
-    "testGather",
-    "testScatter",
-    "testPipeline",
-    "testFarm",
+    "testGatherSmallFilter",
+    "testGatherBigFilter",
+    "testScatterSmallFilter",
+    "testPipelineLightWorkersSmallNumberOfStations",
+    "testPipelineHeavyWorkersSmallNumberOfStations",
+    "testPipelineLightWorkersLargeNumberOfStations",
+    "testFarmLightWorkerSmallNumberOfWorkers",
+    "testFarmLightWorkerMediumNumberOfWorkers",
+    "testFarmLightWorkerLargeNumberOfWorkers",
+    "testFarmHeavyWorkerSmallNumberOfWorkers",
+    "testFarmHeavyWorkerMediumNumberOfWorkers",
+    "testFarmHeavyWorkerLargeNumberOfWorkers"
 };
 
 
