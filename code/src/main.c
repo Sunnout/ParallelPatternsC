@@ -80,15 +80,21 @@ double wctime () {
 int main(int argc, char* argv[]) {
     int i, N;
     int validate = 0;
+    int seq = 0;
+    int t = 1;
     
 
     int c;
-    while ((c = getopt (argc, argv, "dv")) != -1)
+    while ((c = getopt (argc, argv, "dvst:")) != -1)
     switch (c) {
         case 'd':
             debug = 1; break;
         case 'v':
             validate = 1; break;
+        case 's':
+            seq = 1; break;
+        case 't':
+            t = atoi(optarg); break;
         default:
             printf("Invalid option\n");
             abort ();
@@ -129,18 +135,78 @@ int main(int argc, char* argv[]) {
         printf ("\n\n");
 
     
-    printf("Doing %d Tests\n", nTestFunction);
+   
+
+
+    if(seq)
+        printf("Doing  Tests Sequential\n");
+    else
+        printf("Doing Tests Parallel\n");
+
     double TEST_TIME_START = wctime();
-    for (int i = 0;  i < nTestFunction;  i++) {
-        double start = wctime();
-        testFunction[i] (src, N, sizeof(*src));
-        double end = wctime();
-        printf ("%s:\t%8.3lf seconds\n", testNames[i], end-start);
-        if (debug)
-            printf ("\n\n");
-    }
+        double start,end ;
+         switch(t){
+            case 1:
+                for (int i = 0;  i < nTestFunction1;  i++) {
+                    start = wctime();
+                    testFunction1[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%s:\t%8.3lf seconds\n", testNames1[i], end-start);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
+            case 2:
+                for (int i = 0;  i < nTestFunction2;  i++) {
+                    start = wctime();
+                    testFunction2[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%s:\t%8.3lf seconds\n", testNames2[i], end-start);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
+            case 3:
+               for (int i = 0;  i < nTestFunction3;  i++) {
+                    start = wctime();
+                    testFunction3[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%s:\t%8.3lf seconds\n", testNames3[i], end-start);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
+            case 4:
+                for (int i = 0;  i < nTestFunction4;  i++) {
+                    start = wctime();
+                    testFunction4[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%s:\t%8.3lf seconds\n", testNames4[i], end-start);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
+            case 5:
+                for (int i = 0;  i < nTestFunction5;  i++) {
+                    start = wctime();
+                    testFunction5[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%s:\t%8.3lf seconds\n", testNames5[i], end-start);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
+            default:
+                printf("Invalid Test option\n");
+                abort ();
+         }
+      
+    
     double TEST_TIME_END = wctime();
     printf ("%s:\t%8.3lf seconds\n", "Test Time", TEST_TIME_END-TEST_TIME_START);
+
+    
+    
 
     free (src);
     
