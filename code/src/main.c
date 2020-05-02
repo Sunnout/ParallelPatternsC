@@ -112,13 +112,11 @@ int main(int argc, char* argv[]) {
 
     N = atol(argv[0]);
 
-    printf ("Initializing SRC array\n");
-        TYPE *src = malloc (sizeof(*src) * N);
-        for (i = 0; i < N; i++)
-            src[i] = RAND();
-        printf ("Done!\n");
-        
-        PRINT(src, N, "SRC");
+    TYPE *src = malloc (sizeof(*src) * N);
+    for (i = 0; i < N; i++)
+        src[i] = RAND();
+    
+    PRINT(src, N, "SRC");
 
     if(validate) {
         printf ("\n\n");
@@ -139,7 +137,7 @@ int main(int argc, char* argv[]) {
 
 
     if(seq)
-        printf("Doing  Tests Sequential\n");
+        printf("Doing Tests Sequential\n");
     else
         printf("Doing Tests Parallel\n");
 

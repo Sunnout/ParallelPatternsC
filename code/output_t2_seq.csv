@@ -1,0 +1,15 @@
+10000000
+Doing Tests Sequential
+testGatherMediumFilter:	   0.296 seconds
+testScatterMediumFilter:	   0.307 seconds
+Test Time:	   0.603 seconds
+10000000
+Doing Tests Sequential
+testGatherMediumFilter:	   0.254 seconds
+testScatterMediumFilter:	   0.320 seconds
+Test Time:	   0.573 seconds
+10000000
+Doing Tests Sequential
+testGatherMediumFilter:	   0.779 seconds
+testScatterMediumFilter:	   0.939 seconds
+Test Time:	   1.718 seconds

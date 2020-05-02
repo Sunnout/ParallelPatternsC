@@ -581,7 +581,7 @@ void testGatherSmallFilter (void *src, size_t n, size_t size,int seq) {
     assert(n >= 10);
     int nFilter = n * 0.1;
     TYPE *dest = malloc (nFilter * size);
-    int filter[nFilter];
+    int * filter = malloc(sizeof(int)*nFilter);
     for (int i = 0;  i < nFilter;  i++)
         filter[i] = rand() % n;
     printInt (filter, nFilter, "filter");    
@@ -600,7 +600,7 @@ void testGatherMediumFilter (void *src, size_t n, size_t size,int seq) {
     assert(n >= 2);
     int nFilter = n * 0.5;
     TYPE *dest = malloc (nFilter * size);
-    int filter[nFilter];
+    int * filter = malloc(sizeof(int)*nFilter);
     for (int i = 0;  i < nFilter;  i++)
         filter[i] = rand() % n;
     printInt (filter, nFilter, "filter");    
@@ -610,6 +610,7 @@ void testGatherMediumFilter (void *src, size_t n, size_t size,int seq) {
         gather (dest, src, n, size, filter, nFilter);    
     PRINT (dest, nFilter, __FUNCTION__);
     free (dest);
+    free(filter);
 }
 
 /*
@@ -618,7 +619,7 @@ Testing Gather with big filter (array size)
 void testGatherBigFilter (void *src, size_t n, size_t size,int seq) {
     int nFilter = n;
     TYPE *dest = malloc (nFilter * size);
-    int filter[nFilter];
+    int * filter = malloc(sizeof(int)*nFilter);
     for (int i = 0;  i < nFilter;  i++)
         filter[i] = rand() % n;
     printInt (filter, nFilter, "filter");    
