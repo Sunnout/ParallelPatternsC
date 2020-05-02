@@ -1,24 +1,11 @@
-10000
+100000
 Doing Tests Sequential
-testMapHeavyWorker:	   0.025 seconds
-testReduceHeavyWorker:	  25.195 seconds
-testPackMediumFilterAlternated:	   0.000 seconds
-testPipelineMediumWorkersSmallNumberOfStations:	   0.064 seconds
-testFarmHeavyWorkerLargeNumberOfWorkers:	   0.023 seconds
-Test Time:	  25.307 seconds
-10000
-Doing Tests Sequential
-testMapHeavyWorker:	   0.022 seconds
-testReduceHeavyWorker:	  24.172 seconds
-testPackMediumFilterAlternated:	   0.000 seconds
-testPipelineMediumWorkersSmallNumberOfStations:	   0.062 seconds
-testFarmHeavyWorkerLargeNumberOfWorkers:	   0.022 seconds
-Test Time:	  24.278 seconds
-10000
-Doing Tests Sequential
-testMapHeavyWorker:	   0.023 seconds
-testReduceHeavyWorker:	  21.981 seconds
-testPackMediumFilterAlternated:	   0.000 seconds
-testPipelineMediumWorkersSmallNumberOfStations:	   0.063 seconds
-testFarmHeavyWorkerLargeNumberOfWorkers:	   0.022 seconds
-Test Time:	  22.088 seconds
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+testMapHeavyWorker:	   0.204 seconds
+testReduceHeavyWorker:	 192.387 seconds
+testPackMediumFilterAlternated:	   0.001 seconds
+testPipelineMediumWorkersSmallNumberOfStations:	   0.576 seconds
+testFarmHeavyWorkerLargeNumberOfWorkers:	   0.198 seconds
+Test Time:	 580.095 seconds

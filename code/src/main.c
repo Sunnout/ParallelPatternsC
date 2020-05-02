@@ -147,9 +147,10 @@ int main(int argc, char* argv[]) {
             case 1:
                 for (int i = 0;  i < nTestFunction1;  i++) {
                     start = wctime();
-                    testFunction1[i] (src, N, sizeof(*src),seq);
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction1[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames1[i], end-start);
+                    printf ("%s:\t%8.3lf seconds\n", testNames1[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -157,9 +158,10 @@ int main(int argc, char* argv[]) {
             case 2:
                 for (int i = 0;  i < nTestFunction2;  i++) {
                     start = wctime();
-                    testFunction2[i] (src, N, sizeof(*src),seq);
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction2[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames2[i], end-start);
+                    printf ("%s:\t%8.3lf seconds\n", testNames2[i],  (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -167,9 +169,10 @@ int main(int argc, char* argv[]) {
             case 3:
                for (int i = 0;  i < nTestFunction3;  i++) {
                     start = wctime();
-                    testFunction3[i] (src, N, sizeof(*src),seq);
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction3[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames3[i], end-start);
+                    printf ("%s:\t%8.3lf seconds\n", testNames3[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -177,9 +180,10 @@ int main(int argc, char* argv[]) {
             case 4:
                 for (int i = 0;  i < nTestFunction4;  i++) {
                     start = wctime();
-                    testFunction4[i] (src, N, sizeof(*src),seq);
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction4[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames4[i], end-start);
+                    printf ("%s:\t%8.3lf seconds\n", testNames4[i],  (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -187,9 +191,10 @@ int main(int argc, char* argv[]) {
             case 5:
                 for (int i = 0;  i < nTestFunction5;  i++) {
                     start = wctime();
-                    testFunction5[i] (src, N, sizeof(*src),seq);
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction5[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames5[i], end-start);
+                    printf ("%s:\t%8.3lf seconds\n", testNames5[i],  (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -197,9 +202,10 @@ int main(int argc, char* argv[]) {
             case 6:
                 for (int i = 0;  i < nTestFunction6;  i++) {
                     start = wctime();
-                    testFunction6[i] (src, N, sizeof(*src),seq);
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction6[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames6[i], end-start);
+                    printf ("%s:\t%8.3lf seconds\n", testNames6[i],  (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
