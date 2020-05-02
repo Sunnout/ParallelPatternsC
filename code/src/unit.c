@@ -7,10 +7,15 @@
 #include "debug.h"
 #include "unit.h"
 
+
+//Define the data type: 1 -> double; 2 -> long; 3 -> int; 4 -> String (doesn't fully work);
+#define TYPE_SET 1
+
+
+#if TYPE_SET == 1
 //=======================================================
 // TYPE DOUBLE
 //=======================================================
-
 
 #define TYPE double
 #define PRINT(SRC, N, STRING) printDouble(SRC, N, STRING)
@@ -22,13 +27,13 @@ int TYPE_compare(const void* a, const void* b) {
 
     return v1 == v2;
 }
+#endif
 
-
+#if TYPE_SET == 2
 //=======================================================
 // TYPE LONG
 //=======================================================
 
-/*
 #define TYPE long
 #define PRINT(SRC, N, STRING) printLong(SRC, N, STRING)
 #define FMT "%ld"
@@ -39,13 +44,13 @@ int TYPE_compare(const void* a, const void* b) {
 
     return v1 == v2;
 }
-*/
+#endif
 
+#if TYPE_SET == 3
 //=======================================================
 // TYPE INT
 //=======================================================
 
-/*
 #define TYPE int
 #define PRINT(SRC, N, STRING) printInt(SRC, N, STRING)
 #define FMT "%d"
@@ -56,13 +61,13 @@ int TYPE_compare(const void* a, const void* b) {
 
     return v1 == v2;
 }
-*/
+#endif
 
+#if TYPE_SET == 4
 //=======================================================
 // TYPE STRING
 //=======================================================
 
-/*
 #define TYPE char *
 #define PRINT(SRC, N, STRING) printString(SRC, N, STRING)
 #define FMT "%s"
@@ -72,8 +77,7 @@ int TYPE_compare(const void* a, const void* b) {
     const char *b1 = *(char **)b;
     return strcmp (a1, b1);
 }
-
-*/
+#endif
 
 
 //=======================================================
@@ -199,7 +203,7 @@ void validateMap (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < n  && !error;i++){
         if (seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in MAP %d \n", i);
+            printf("ERROR in MAP %d", i);
         }
     }
 
@@ -215,14 +219,10 @@ void validateReduce (void *src, size_t n, size_t size) {
     TYPE *dest = malloc (n * size);
     reduce (dest, src, n, size, workerAdd);
     
-    int error = 0;
-    for(int i = 0 ;  i < n  && !error;i++){
-        if ( seq_dest[i] != dest[i]){
-            error = 1;
-            printf("ERROR in REDUCE %d \n",i);
-        }
+    if (seq_dest[0] != dest[0]){
+        printf("Precision ERROR in REDUCE %d", 0);
     }
-
+    
     free (dest);
     free(seq_dest);
 }
@@ -239,7 +239,7 @@ void validateScan (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < n  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in SCAN %d \n",i);
+            printf("Precision ERROR in SCAN %d", i);
         }
     }
 
@@ -265,7 +265,7 @@ void validatePack (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < nFilter  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in PACK %d \n",i);
+            printf("ERROR in PACK %d",i);
         }
     }
 
@@ -290,7 +290,7 @@ void validateGather (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < nFilter  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in GATHER %d \n",i);
+            printf("ERROR in GATHER %d",i);
         }
     }
 
@@ -316,7 +316,7 @@ void validateScatter (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < nDest  && !error;i++){
         if (seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in SCATTER %d \n",i);
+            printf("Non deterministic ERROR in SCATTER %d", i);
         }
     }
 
@@ -342,7 +342,7 @@ void validatePipeline (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < n  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in PipeLine %d \n",i);
+            printf("ERROR in PipeLine %d",i);
         }
     }
 
@@ -362,7 +362,7 @@ void validateFarm (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < n  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in FARM %d \n",i);
+            printf("ERROR in FARM %d",i);
         }
     }
 
