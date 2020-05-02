@@ -196,6 +196,16 @@ int main(int argc, char* argv[]) {
                         printf ("\n\n");
                 }
             break;
+            case 6:
+                for (int i = 0;  i < nTestFunction6;  i++) {
+                    start = wctime();
+                    testFunction6[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%s:\t%8.3lf seconds\n", testNames6[i], end-start);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
             default:
                 printf("Invalid Test option\n");
                 abort ();

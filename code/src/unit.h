@@ -40,6 +40,13 @@ extern char *testNames5[];
 extern int nTestFunction5;
 
 
+extern TESTFUNCTION testFunction6[];
+
+extern char *testNames6[];
+
+extern int nTestFunction6;
+
+
 typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
 
 extern VALIDATEFUNCTION validateFunction[];
