@@ -138,6 +138,11 @@ static void workerAddOneHeavy(void* a, const void* b) {
      *(TYPE *)a = *(TYPE *)b + 1;
 }
 
+static void workerAddOneMedium(void* a, const void* b) {
+    for(int i = 0; i < 350; i++){;}
+     *(TYPE *)a = *(TYPE *)b + 1;
+}
+
 static void workerAddHeavy(void* a, const void* b, const void* c) {
     for(int i = 0; i < 1000000; i++){;}
     *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
@@ -643,6 +648,30 @@ void testPipelineLightWorkersSmallNumberOfStations (void *src, size_t n, size_t 
         seq_pipeline (dest, src, n, size, pipelineFunction, nPipelineFunction);
     else
         pipeline (dest, src, n, size, pipelineFunction, nPipelineFunction);
+    PRINT (dest, n, __FUNCTION__);    
+    free (dest);
+}
+
+/*
+Testing Pipeline with medium workers and small number of stations
+*/
+void testPipelineMediumWorkersSmallNumberOfStations (void *src, size_t n, size_t size,int seq) {
+    void (*pipelineFunction[])(void*, const void*) = {
+        workerAddOneMedium,
+        workerAddOneMedium,
+        workerAddOneMedium,
+        workerAddOneMedium,
+        workerAddOneMedium,
+        workerAddOneMedium,
+        workerAddOneMedium,
+        workerAddOneMedium,        
+    };
+    int nPipelineFunction = sizeof (pipelineFunction)/sizeof(pipelineFunction[0]);
+    TYPE *dest = malloc (n * size);
+    if(seq)
+        seq_pipeline (dest, src, n, size, pipelineFunction, nPipelineFunction);
+    else
+        seq_pipeline (dest, src, n, size, pipelineFunction, nPipelineFunction);
     PRINT (dest, n, __FUNCTION__);    
     free (dest);
 }
@@ -4264,44 +4293,24 @@ char *testNames[] = {
 // Tests 1
 //=======================================================
 
+/*
+    Array size 5M and varying Thread count
+*/
+
 TESTFUNCTION testFunction1[] = {
-    testMapLightWorker,
     testMapHeavyWorker,
-    testReduceLightWorker,
     testReduceHeavyWorker,
-    testScanLightWorker,
-    testScanHeavyWorker,
-    testPackSmallFilter,
-    testPackBigFilter,
-    testGatherSmallFilter,
-    testScatterSmallFilter,
-    testPipelineLightWorkersSmallNumberOfStations,
-    testPipelineHeavyWorkersSmallNumberOfStations,
-    testPipelineLightWorkersLargeNumberOfStations,
-    testFarmLightWorkerLargeNumberOfWorkers,
-    testFarmHeavyWorkerSmallNumberOfWorkers,
-    testFarmHeavyWorkerMediumNumberOfWorkers,
+    testPackMediumFilterAlternated,
+    testPipelineMediumWorkersSmallNumberOfStations,
     testFarmHeavyWorkerLargeNumberOfWorkers,
 
 };
 
 char *testNames1[] = {
-    "testMapLightWorker",
     "testMapHeavyWorker",
-    "testReduceLightWorker",
     "testReduceHeavyWorker",
-    "testScanLightWorker",
-    "testScanHeavyWorker",
-    "testPackSmallFilter",
-    "testPackBigFilter",
-    "testGatherSmallFilter",
-    "testScatterSmallFilter",
-    "testPipelineLightWorkersSmallNumberOfStations",
-    "testPipelineHeavyWorkersSmallNumberOfStations",
-    "testPipelineLightWorkersLargeNumberOfStations",
-    "testFarmLightWorkerLargeNumberOfWorkers",
-    "testFarmHeavyWorkerSmallNumberOfWorkers",
-    "testFarmHeavyWorkerMediumNumberOfWorkers",
+    "testPackMediumFilterAlternated",
+    "testPipelineMediumWorkersSmallNumberOfStations",
     "testFarmHeavyWorkerLargeNumberOfWorkers"
     };
 
