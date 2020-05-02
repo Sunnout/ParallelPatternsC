@@ -1,0 +1,9 @@
+100000
+Doing Tests Sequential
+testPipelineLightWorkersSmallNumberOfStations:	   0.005 seconds
+testPipelineLightWorkersMediumNumberOfStations:	   0.140 seconds
+testPipelineLightWorkersLargeNumberOfStations:	   1.379 seconds
+testPipelineMediumWorkersSmallNumberOfStations:	   0.475 seconds
+testPipelineMediumWorkersMediumNumberOfStations:	  17.581 seconds
+testPipelineMediumWorkersLargeNumberOfStations:	 176.281 seconds
+Test Time:	 587.584 seconds

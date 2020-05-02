@@ -1,0 +1,21 @@
+100000 2
+Doing Tests Parallel
+testMapLightWorker:	   0.001 seconds
+testReduceLightWorker:	   0.000 seconds
+testPipelineLightWorkersLargeNumberOfStations:	   0.952 seconds
+testFarmLightWorkerLargeNumberOfWorkers:	   0.074 seconds
+Test Time:	   3.082 seconds
+100000 4
+Doing Tests Parallel
+testMapLightWorker:	   0.000 seconds
+testReduceLightWorker:	   0.000 seconds
+testPipelineLightWorkersLargeNumberOfStations:	   1.410 seconds
+testFarmLightWorkerLargeNumberOfWorkers:	   0.119 seconds
+Test Time:	   4.589 seconds
+100000 8
+Doing Tests Parallel
+testMapLightWorker:	   0.001 seconds
+testReduceLightWorker:	   0.000 seconds
+testPipelineLightWorkersLargeNumberOfStations:	   7.476 seconds
+testFarmLightWorkerLargeNumberOfWorkers:	   0.170 seconds
+Test Time:	  22.944 seconds

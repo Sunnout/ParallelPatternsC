@@ -7605,7 +7605,7 @@ int nTestFunction4 = sizeof (testFunction4)/sizeof(testFunction4[0]);
 
 /*
     Parallel And Sequential
-    Varying array size 500, 1m, 10m, 100m, 1M and fixing Thread 16
+    Varying  SIZES=(250 500 1000 2000 5000 10000 15000) and fixing Thread 16
 */
 
 TESTFUNCTION testFunction5[] = {
