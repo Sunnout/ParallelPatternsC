@@ -1,1 +1,33 @@
 100000 2
+Doing Tests Parallel
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+testMapHeavyWorker:	   0.101 seconds
+testReduceHeavyWorker:	  95.602 seconds
+testPackMediumFilterAlternated:	   0.164 seconds
+testPipelineMediumWorkersSmallNumberOfStations:	   0.575 seconds
+testFarmHeavyWorkerLargeNumberOfWorkers:	   0.308 seconds
+Test Time:	 290.250 seconds
+100000 4
+Doing Tests Parallel
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+testMapHeavyWorker:	   0.081 seconds
+testReduceHeavyWorker:	  66.866 seconds
+testPackMediumFilterAlternated:	   0.221 seconds
+testPipelineMediumWorkersSmallNumberOfStations:	   0.585 seconds
+testFarmHeavyWorkerLargeNumberOfWorkers:	   0.198 seconds
+Test Time:	 203.856 seconds
+100000 8
+Doing Tests Parallel
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+ENTREI BADALHOCA
+testMapHeavyWorker:	   0.069 seconds
+testReduceHeavyWorker:	  65.602 seconds
+testPackMediumFilterAlternated:	   0.162 seconds
+testPipelineMediumWorkersSmallNumberOfStations:	   0.575 seconds
+testFarmHeavyWorkerLargeNumberOfWorkers:	   0.191 seconds
+Test Time:	 199.798 seconds
