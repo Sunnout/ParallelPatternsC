@@ -8,6 +8,7 @@
 #include "unit.h"
 #include "debug.h"
 
+#include <omp.h>
 
 //Define the data type: 1 -> double; 2 -> long; 3 -> int; 4 -> String (doesn't fully work);
 #define TYPE_SET 1
@@ -133,13 +134,7 @@ int main(int argc, char* argv[]) {
         printf ("\n\n");
 
     
-   
-
-
-    if(seq)
-        printf("Doing Tests Sequential\n");
-    else
-        printf("Doing Tests Parallel\n");
+    printf("Threads, Array Size, Test, Time\n");
 
     double TEST_TIME_START = wctime();
         double start,end ;
@@ -150,7 +145,7 @@ int main(int argc, char* argv[]) {
                     for (int j = 0 ; j < 3 ; j++)
                         testFunction1[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames1[i], (end-start)/3.0);
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames1[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -161,7 +156,7 @@ int main(int argc, char* argv[]) {
                     for (int j = 0 ; j < 3 ; j++)
                         testFunction2[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames2[i],  (end-start)/3.0);
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames2[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -172,7 +167,7 @@ int main(int argc, char* argv[]) {
                     for (int j = 0 ; j < 3 ; j++)
                         testFunction3[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames3[i], (end-start)/3.0);
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames3[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -183,7 +178,7 @@ int main(int argc, char* argv[]) {
                     for (int j = 0 ; j < 3 ; j++)
                         testFunction4[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames4[i],  (end-start)/3.0);
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames4[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -194,7 +189,7 @@ int main(int argc, char* argv[]) {
                     for (int j = 0 ; j < 3 ; j++)
                         testFunction5[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames5[i],  (end-start)/3.0);
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames5[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }
@@ -205,7 +200,7 @@ int main(int argc, char* argv[]) {
                     for (int j = 0 ; j < 3 ; j++)
                         testFunction6[i] (src, N, sizeof(*src),seq);
                     end = wctime();
-                    printf ("%s:\t%8.3lf seconds\n", testNames6[i],  (end-start)/3.0);
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames6[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }

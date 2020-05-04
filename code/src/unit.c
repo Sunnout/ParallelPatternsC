@@ -7500,7 +7500,7 @@ typedef void (*TESTFUNCTION)(void *, size_t, size_t,int);
 
 /*
     Parallel And Sequential
-    Array size 5M and varying Thread count
+    Array size 100m and varying Thread count
 */
 
 TESTFUNCTION testFunction1[] = {
@@ -7530,7 +7530,7 @@ int nTestFunction1 = sizeof (testFunction1)/sizeof(testFunction1[0]);
 
 /*
     Parallel Only
-    Array size 10M and varying Thread count
+    Array size 100M and varying Thread count
 */
 
 TESTFUNCTION testFunction2[] = {
@@ -7578,7 +7578,7 @@ int nTestFunction3 = sizeof (testFunction3)/sizeof(testFunction3[0]);
 
 /*
     Parallel And Sequential
-    Array size 5M and varying Thread count
+    Array size 100m and varying Thread count
 */
 
 

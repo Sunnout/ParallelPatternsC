@@ -1,15 +1,4 @@
-10000000
-Doing Tests Sequential
-testGatherMediumFilter:	   0.296 seconds
-testScatterMediumFilter:	   0.307 seconds
-Test Time:	   0.603 seconds
-10000000
-Doing Tests Sequential
-testGatherMediumFilter:	   0.254 seconds
-testScatterMediumFilter:	   0.320 seconds
-Test Time:	   0.573 seconds
-10000000
-Doing Tests Sequential
-testGatherMediumFilter:	   0.779 seconds
-testScatterMediumFilter:	   0.939 seconds
-Test Time:	   1.718 seconds
+Threads, Array Size, Test, Time
+1, 100000000, testGatherMediumFilter,    5.530
+1, 100000000, testScatterMediumFilter,    6.078
+Test Time:	  34.823 seconds
