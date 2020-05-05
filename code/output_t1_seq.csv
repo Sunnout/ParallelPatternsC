@@ -1,11 +1,6 @@
-100000
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.204 seconds
-testReduceHeavyWorker:	 192.387 seconds
-testPackMediumFilterAlternated:	   0.001 seconds
-testPipelineMediumWorkersSmallNumberOfStations:	   0.576 seconds
-testFarmHeavyWorkerLargeNumberOfWorkers:	   0.198 seconds
-Test Time:	 580.095 seconds
+Threads, Array Size, Test, Time
+1, 100000, testMapHeavyWorker,	   0.204 
+1, 100000, testReduceHeavyWorker,	 192.387
+1, 100000, testPackMediumFilterAlternated,	   0.001
+1, 100000, testPipelineMediumWorkersSmallNumberOfStations,	   0.576
+1, 100000, testFarmHeavyWorkerLargeNumberOfWorkers,	   0.198
