@@ -1,1 +1,7 @@
 Threads, Array Size, Test, Time
+2, 100000000, testGatherMediumFilter,   13.014
+2, 100000000, testScatterMediumFilter,   15.601
+4, 100000000, testGatherMediumFilter,    9.122
+4, 100000000, testScatterMediumFilter,   13.035
+8, 100000000, testGatherMediumFilter,    7.167
+8, 100000000, testScatterMediumFilter,    6.137
