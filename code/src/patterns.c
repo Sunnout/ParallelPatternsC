@@ -107,8 +107,13 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
     if(current >= nPow-1) {
         tree[current].min = current-(nPow-1);
         tree[current].max = current-(nPow-2);
-        if(tree[current].min < nJob)
+        if(tree[current].min < nJob){
             tree[current].sum = &s[tree[current].min*sizeJob];
+        }
+        else{
+            tree[current].sum = malloc(sizeJob);
+        }
+        
         tree[current].fromLeft = calloc(1,sizeJob);      
     } else {
         int split = (max-min)/2 + min;
@@ -395,7 +400,7 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
                 for(int j = 0; j < nWorkers && finished < nJob; j++){
                     if (!flagWorkers[j]){
                         flagWorkers[j] = 1; 
-                        #pragma omp task
+                        #pragma omp task untied
                         {
                             worker (&d[finished * sizeJob], &s[finished * sizeJob]);
                             flagWorkers[j] = 0; 
