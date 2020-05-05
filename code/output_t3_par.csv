@@ -1,7 +1,11 @@
 Threads, Array Size, Test, Time
-2, 1024, testScanLightWorker,    0.002
-2, 1024, testScanHeavyWorker,    2.803
-4, 1024, testScanLightWorker,    0.002
-4, 1024, testScanHeavyWorker,    1.619
-8, 1024, testScanLightWorker,    0.002
-8, 1024, testScanHeavyWorker,    1.452
+4, 2048, testScanHeavyWorker,    4.146
+4, 2049, testScanHeavyWorker,    6.618
+4, 3000, testScanHeavyWorker,    7.227
+4, 4096, testScanHeavyWorker,    7.733
+4, 4097, testScanHeavyWorker,   13.035
+4, 6000, testScanHeavyWorker,   14.651
+4, 8192, testScanHeavyWorker,   15.970
+4, 8193, testScanHeavyWorker,   26.781
+4, 12000, testScanHeavyWorker,   29.683
+4, 16384, testScanHeavyWorker,   31.247

@@ -1,91 +1,56 @@
-250
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.001 seconds
-testReduceHeavyWorker:	   0.382 seconds
-testGatherMediumFilter:	   0.000 seconds
-testScatterMediumFilter:	   0.000 seconds
-testScanHeavyWorker:	   0.379 seconds
-testPackMediumFilterPacked:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.004 seconds
-Test Time:	   2.298 seconds
-500
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.001 seconds
-testReduceHeavyWorker:	   0.749 seconds
-testGatherMediumFilter:	   0.000 seconds
-testScatterMediumFilter:	   0.000 seconds
-testScanHeavyWorker:	   0.747 seconds
-testPackMediumFilterPacked:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.007 seconds
-Test Time:	   4.510 seconds
-1000
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.002 seconds
-testReduceHeavyWorker:	   1.496 seconds
-testGatherMediumFilter:	   0.000 seconds
-testScatterMediumFilter:	   0.000 seconds
-testScanHeavyWorker:	   1.488 seconds
-testPackMediumFilterPacked:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.014 seconds
-Test Time:	   8.998 seconds
-2000
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.004 seconds
-testReduceHeavyWorker:	   2.990 seconds
-testGatherMediumFilter:	   0.000 seconds
-testScatterMediumFilter:	   0.000 seconds
-testScanHeavyWorker:	   2.978 seconds
-testPackMediumFilterPacked:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.027 seconds
-Test Time:	  17.994 seconds
-5000
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.009 seconds
-testReduceHeavyWorker:	   7.461 seconds
-testGatherMediumFilter:	   0.000 seconds
-testScatterMediumFilter:	   0.000 seconds
-testScanHeavyWorker:	   7.454 seconds
-testPackMediumFilterPacked:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.068 seconds
-Test Time:	  44.979 seconds
-10000
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.018 seconds
-testReduceHeavyWorker:	  14.902 seconds
-testGatherMediumFilter:	   0.000 seconds
-testScatterMediumFilter:	   0.000 seconds
-testScanHeavyWorker:	  14.891 seconds
-testPackMediumFilterPacked:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.138 seconds
-Test Time:	  89.850 seconds
-15000
-Doing Tests Sequential
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-ENTREI BADALHOCA
-testMapHeavyWorker:	   0.026 seconds
-testReduceHeavyWorker:	  22.355 seconds
-testGatherMediumFilter:	   0.000 seconds
-testScatterMediumFilter:	   0.000 seconds
-testScanHeavyWorker:	  22.350 seconds
-testPackMediumFilterPacked:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.206 seconds
-Test Time:	 134.812 seconds
+1, 250, testMapHeavyWorker,    0.001
+1, 250, testReduceHeavyWorker,    0.470
+1, 250, testGatherMediumFilter,    0.000
+1, 250, testScatterMediumFilter,    0.000
+1, 250, testScanHeavyWorker,    0.469
+1, 250, testPackMediumFilterPacked,    0.000
+1, 250, testPipelineLightWorkersLargeNumberOfStations,    0.004
+Test Time:	   2.833 seconds
+1, 500, testMapHeavyWorker,    0.001
+1, 500, testReduceHeavyWorker,    0.941
+1, 500, testGatherMediumFilter,    0.000
+1, 500, testScatterMediumFilter,    0.000
+1, 500, testScanHeavyWorker,    0.944
+1, 500, testPackMediumFilterPacked,    0.000
+1, 500, testPipelineLightWorkersLargeNumberOfStations,    0.008
+Test Time:	   5.684 seconds
+1, 1000, testMapHeavyWorker,    0.002
+1, 1000, testReduceHeavyWorker,    1.877
+1, 1000, testGatherMediumFilter,    0.000
+1, 1000, testScatterMediumFilter,    0.000
+1, 1000, testScanHeavyWorker,    1.884
+1, 1000, testPackMediumFilterPacked,    0.000
+1, 1000, testPipelineLightWorkersLargeNumberOfStations,    0.017
+Test Time:	  11.339 seconds
+1, 2000, testMapHeavyWorker,    0.004
+1, 2000, testReduceHeavyWorker,    3.744
+1, 2000, testGatherMediumFilter,    0.000
+1, 2000, testScatterMediumFilter,    0.000
+1, 2000, testScanHeavyWorker,    3.748
+1, 2000, testPackMediumFilterPacked,    0.000
+1, 2000, testPipelineLightWorkersLargeNumberOfStations,    0.033
+Test Time:	  22.587 seconds
+1, 5000, testMapHeavyWorker,    0.010
+1, 5000, testReduceHeavyWorker,    9.377
+1, 5000, testGatherMediumFilter,    0.000
+1, 5000, testScatterMediumFilter,    0.000
+1, 5000, testScanHeavyWorker,    9.383
+1, 5000, testPackMediumFilterPacked,    0.000
+1, 5000, testPipelineLightWorkersLargeNumberOfStations,    0.083
+Test Time:	  56.559 seconds
+1, 10000, testMapHeavyWorker,    0.019
+1, 10000, testReduceHeavyWorker,   18.758
+1, 10000, testGatherMediumFilter,    0.000
+1, 10000, testScatterMediumFilter,    0.000
+1, 10000, testScanHeavyWorker,   18.748
+1, 10000, testPackMediumFilterPacked,    0.000
+1, 10000, testPipelineLightWorkersLargeNumberOfStations,    0.166
+Test Time:	 113.076 seconds
+1, 15000, testMapHeavyWorker,    0.030
+1, 15000, testReduceHeavyWorker,   28.144
+1, 15000, testGatherMediumFilter,    0.000
+1, 15000, testScatterMediumFilter,    0.000
+1, 15000, testScanHeavyWorker,   28.199
+1, 15000, testPackMediumFilterPacked,    0.000
+1, 15000, testPipelineLightWorkersLargeNumberOfStations,    0.250
+Test Time:	 169.868 seconds

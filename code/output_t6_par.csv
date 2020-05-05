@@ -1,9 +1,2 @@
-100000 4
-Doing Tests Parallel
-testPipelineLightWorkersSmallNumberOfStations:	   0.148 seconds
-testPipelineLightWorkersMediumNumberOfStations:	   0.202 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   0.543 seconds
-testPipelineMediumWorkersSmallNumberOfStations:	   0.495 seconds
-testPipelineMediumWorkersMediumNumberOfStations:	  17.648 seconds
-testPipelineMediumWorkersLargeNumberOfStations:	 175.747 seconds
-Test Time:	 584.347 seconds
+4, 100000, testReduceHeavyWorker,   42.444
+Test Time:	 127.332 seconds

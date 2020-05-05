@@ -8004,22 +8004,22 @@ int nTestFunction5 = sizeof (testFunction5)/sizeof(testFunction5[0]);
 
 TESTFUNCTION testFunction6[] = {
       testReduceHeavyWorker,
-      testPipelineLightWorkersSmallNumberOfStations,
-      testPipelineLightWorkersMediumNumberOfStations,
-      testPipelineLightWorkersLargeNumberOfStations,
-      testPipelineMediumWorkersSmallNumberOfStations,
-      testPipelineMediumWorkersMediumNumberOfStations,
-      testPipelineMediumWorkersLargeNumberOfStations,
+    //   testPipelineLightWorkersSmallNumberOfStations,
+    //   testPipelineLightWorkersMediumNumberOfStations,
+    //   testPipelineLightWorkersLargeNumberOfStations,
+    //   testPipelineMediumWorkersSmallNumberOfStations,
+    //   testPipelineMediumWorkersMediumNumberOfStations,
+    //   testPipelineMediumWorkersLargeNumberOfStations,
 };
 
 char *testNames6[] = {
        "testReduceHeavyWorker",
-       "testPipelineLightWorkersSmallNumberOfStations",
-       "testPipelineLightWorkersMediumNumberOfStations",
-       "testPipelineLightWorkersLargeNumberOfStations",
-       "testPipelineMediumWorkersSmallNumberOfStations",
-       "testPipelineMediumWorkersMediumNumberOfStations",
-       "testPipelineMediumWorkersLargeNumberOfStations",
+    //    "testPipelineLightWorkersSmallNumberOfStations",
+    //    "testPipelineLightWorkersMediumNumberOfStations",
+    //    "testPipelineLightWorkersLargeNumberOfStations",
+    //    "testPipelineMediumWorkersSmallNumberOfStations",
+    //    "testPipelineMediumWorkersMediumNumberOfStations",
+    //    "testPipelineMediumWorkersLargeNumberOfStations",
 };
 
 int nTestFunction6 = sizeof (testFunction6)/sizeof(testFunction6[0]);

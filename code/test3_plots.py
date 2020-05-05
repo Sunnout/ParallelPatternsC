@@ -3,6 +3,7 @@
 
 import pandas as pd 
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import numpy as np
 
 
@@ -14,21 +15,18 @@ par_data = pd.read_csv("output_t3_par.csv")
 par_data.columns = ['threads', 'size', 'test', 'time']
 
 
-lightScan_par = par_data[par_data['test'].str.contains("testScanLightWorker")]
+#lightScan_par = par_data[par_data['test'].str.contains("testScanLightWorker")]
 
 heavyScan_par = par_data[par_data['test'].str.contains("testScanHeavyWorker")]
 
 
-threads = [2,4,8]
-
 plt.figure(1, figsize=(12,8))
-plt.plot(threads, lightScan_par['time'], '-ro', label="Light Scan")
-plt.plot(threads, heavyScan_par['time'], '-bo', label="Heavy Scan")
+#plt.plot(threads, lightScan_par['time'], '-ro', label="Light Scan")
+plt.plot(heavyScan_par['size'], heavyScan_par['time'], '-o', color="firebrick", label="Scan with Heavy Worker")
 plt.ylim(bottom=0)
-plt.xlabel("Number of Threads \n Input Size: 1024")
+plt.xlabel("Input Size")
 plt.ylabel("Runtime (seconds)")
 plt.legend()
-plt.show()
-plt.title("Runtime for different number of Threads")
+plt.title("Stair Effect in Scan Pattern")
 plt.savefig('plots/test3_runtime.png')
 plt.close()
