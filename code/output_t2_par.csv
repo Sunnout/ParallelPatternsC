@@ -1,8 +1,1 @@
 Threads, Array Size, Test, Time
-2, 100000000, testGatherMediumFilter,    4.155
-2, 100000000, testScatterMediumFilter,    5.437
-Test Time:	  28.778 seconds
-Threads, Array Size, Test, Time
-4, 100000000, testGatherMediumFilter,    4.501
-4, 100000000, testScatterMediumFilter,    5.462
-Test Time:	  29.889 seconds

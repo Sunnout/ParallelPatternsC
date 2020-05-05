@@ -134,8 +134,6 @@ int main(int argc, char* argv[]) {
         printf ("\n\n");
 
     
-    printf("Threads, Array Size, Test, Time\n");
-
     double TEST_TIME_START = wctime();
         double start,end ;
          switch(t){
