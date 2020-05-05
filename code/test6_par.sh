@@ -1,5 +1,5 @@
 #!/bin/bash
-SIZES=(100000)
+SIZES=(100)
 THREADS=(4)
 
 

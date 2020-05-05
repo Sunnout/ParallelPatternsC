@@ -81,13 +81,14 @@ typedef struct
 } TreeNode;
 
 
-int nextPower_2 (int x) {
-   x = x - 1; 
-   x = x | (x >> 1); 
-   x = x | (x >> 2); 
-   x = x | (x >> 4); 
-   x = x | (x >> 8); 
-   return x + 1; 
+size_t nextPower_2 (int x) {
+   size_t res = 1;
+
+    while(res < x){
+        res = res * 2;
+    }
+
+   return res; 
 }
 
 
@@ -234,7 +235,7 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
         worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
     } 
 
-    freeTree(tree, nextPow2*2-1,nextPow2,nJob);
+   freeTree(tree, nextPow2*2-1,nextPow2,nJob);
 }
 
 

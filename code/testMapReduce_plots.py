@@ -36,25 +36,32 @@ Hmap_seq = seq_data_7[seq_data_7['test'].str.contains("testMapHeavyWorker")]
 Hreduce_seq = seq_data_6[seq_data_6['test'].str.contains("testReduceHeavyWorker")]
 
 
-Lmap_par = par_data_0[par_data_0['test'].str.contains("testMapLightWorker")]
-Lreduce_par = par_data_0[par_data_0['test'].str.contains("testReduceLightWorker")]
-Lmap_seq = seq_data_0[seq_data_0['test'].str.contains("testMapLightWorker")]
-Lreduce_seq = seq_data_0[seq_data_0['test'].str.contains("testReduceLightWorker")]
+Lmap_par = par_data_0[par_data_0['test'].str.contains("testMapLightWorker") and (par_data_0['size'].str.contains("200000000"))]
+Lreduce_par = par_data_0[par_data_0['test'].str.contains("testReduceLightWorker") and (par_data_0['size'].str.contains("200000000"))]
+Lmap_seq = seq_data_0[seq_data_0['test'].str.contains("testMapLightWorker") and (par_data_0['size'].str.contains("200000000"))]
+Lreduce_seq = seq_data_0[seq_data_0['test'].str.contains("testReduceLightWorker") and (par_data_0['size'].str.contains("200000000"))]
 
 
 
-SLmap = (Lmap_seq/Lmap_par).values
-SHmap = (Hmap_seq/Hmap_par).values
-SLreduce = (Lreduce_seq/Lreduce_par).values
-SHreduce = (Hreduce_seq/Hreduce_par).values
+SLmap = Lmap_seq['time'].values/Lmap_par['time'].values
+SHmap = Hmap_seq['time'].values/Hmap_par['time'].values
+SLreduce = Lreduce_seq['time'].values/Lreduce_par['time'].values
+SHreduce = Hreduce_seq['time'].values/Hreduce_par['time'].values
 
 
 
 print(Hmap_seq)
 print(Hmap_par)
-print(SHmap)
 
-speedups = [SLmap, SHmap, SLreduce,SHreduce]
+speedups = [SLmap[0], SHmap[0], SLreduce[0],SHreduce[0]]
 
 
-plt.bar(x=["Light Map", "Heavy Map", "Light Reduce", "Heavy reduce"],height=speedups)
+print(speedups)
+
+
+teamColours = ['navajowhite','orange','navajowhite','orange']
+
+plt.bar(x=["Light Map", "Heavy Map", "Light Reduce", "Heavy reduce"],height=speedups,color=teamColours)
+plt.title("Time SpeedUp with Light vs Heavy Workers")
+plt.ylabel("Time SpeedUp")
+plt.show()
