@@ -1,7 +1,5 @@
-100000
-Doing Tests Sequential
-testMapLightWorker:	   0.001 seconds
-testReduceLightWorker:	   0.000 seconds
-testPipelineLightWorkersLargeNumberOfStations:	   1.684 seconds
-testFarmLightWorkerLargeNumberOfWorkers:	   0.000 seconds
-Test Time:	   5.057 seconds
+Threads, Array Size, Test, Time
+1, 100000, testMapLightWorker,	   0.001
+1, 100000, testReduceLightWorker,	   0.000
+1, 100000, testPipelineLightWorkersLargeNumberOfStations,	   1.684
+1, 100000, testFarmLightWorkerLargeNumberOfWorkers,	   0.000

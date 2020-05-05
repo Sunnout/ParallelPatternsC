@@ -7816,6 +7816,47 @@ typedef void (*TESTFUNCTION)(void *, size_t, size_t,int);
 
 
 //=======================================================
+// Tests 0
+//=======================================================
+
+/*
+    Parallel And Sequential
+    Array size 100M and 16 Threads
+*/
+
+TESTFUNCTION testFunction0[] = {
+    testMapLightWorker,
+    testReduceLightWorker,
+};
+
+char *testNames0[] = {
+    "testMapLightWorker",
+    "testReduceLightWorker",
+};
+
+int nTestFunction0 = sizeof (testFunction0)/sizeof(testFunction0[0]);
+
+//=======================================================
+// Tests 7
+//=======================================================
+
+/*
+    Parallel And Sequential
+    Array size 1M and 16 Threads
+*/
+
+TESTFUNCTION testFunction7[] = {
+    testMapHeavyWorker,
+};
+
+char *testNames7[] = {
+    "testMapHeavyWorker",
+};
+
+int nTestFunction7 = sizeof (testFunction7)/sizeof(testFunction7[0]);
+
+
+//=======================================================
 // Tests 1
 //=======================================================
 
@@ -7830,7 +7871,6 @@ TESTFUNCTION testFunction1[] = {
     testPackMediumFilterAlternated,
     testPipelineMediumWorkersSmallNumberOfStations,
     testFarmHeavyWorkerLargeNumberOfWorkers,
-
 };
 
 char *testNames1[] = {
@@ -7963,6 +8003,7 @@ int nTestFunction5 = sizeof (testFunction5)/sizeof(testFunction5[0]);
 */
 
 TESTFUNCTION testFunction6[] = {
+      testReduceHeavyWorker,
       testPipelineLightWorkersSmallNumberOfStations,
       testPipelineLightWorkersMediumNumberOfStations,
       testPipelineLightWorkersLargeNumberOfStations,
@@ -7972,6 +8013,7 @@ TESTFUNCTION testFunction6[] = {
 };
 
 char *testNames6[] = {
+       "testReduceHeavyWorker",
        "testPipelineLightWorkersSmallNumberOfStations",
        "testPipelineLightWorkersMediumNumberOfStations",
        "testPipelineLightWorkersLargeNumberOfStations",

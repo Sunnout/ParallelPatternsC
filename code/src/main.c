@@ -137,6 +137,17 @@ int main(int argc, char* argv[]) {
     double TEST_TIME_START = wctime();
         double start,end ;
          switch(t){
+             case 0:
+                for (int i = 0;  i < nTestFunction0;  i++) {
+                    start = wctime();
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction0[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames0[i], (end-start)/3.0);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
             case 1:
                 for (int i = 0;  i < nTestFunction1;  i++) {
                     start = wctime();
@@ -199,6 +210,17 @@ int main(int argc, char* argv[]) {
                         testFunction6[i] (src, N, sizeof(*src),seq);
                     end = wctime();
                     printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames6[i], (end-start)/3.0);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
+            case 7:
+                for (int i = 0;  i < nTestFunction7;  i++) {
+                    start = wctime();
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction7[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames7[i], (end-start)/3.0);
                     if (debug)
                         printf ("\n\n");
                 }

@@ -3,6 +3,20 @@
 
 typedef void (*TESTFUNCTION)(void *, size_t, size_t,int);
 
+extern TESTFUNCTION testFunction0[];
+
+extern char *testNames0[];
+
+extern int nTestFunction0;
+
+
+extern TESTFUNCTION testFunction7[];
+
+extern char *testNames7[];
+
+extern int nTestFunction7;
+
+
 extern TESTFUNCTION testFunction1[];
 
 extern char *testNames1[];
