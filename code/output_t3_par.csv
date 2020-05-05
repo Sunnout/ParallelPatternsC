@@ -1,15 +1,7 @@
-1024 2
-Doing Tests Parallel
-testScanLightWorker:	   0.001 seconds
-testScanHeavyWorker:	   2.932 seconds
-Test Time:	   8.799 seconds
-1024 4
-Doing Tests Parallel
-testScanLightWorker:	   0.003 seconds
-testScanHeavyWorker:	   2.178 seconds
-Test Time:	   6.543 seconds
-1024 8
-Doing Tests Parallel
-testScanLightWorker:	   0.003 seconds
-testScanHeavyWorker:	   2.226 seconds
-Test Time:	   6.689 seconds
+Threads, Array Size, Test, Time
+2, 1024, testScanLightWorker,    0.002
+2, 1024, testScanHeavyWorker,    2.803
+4, 1024, testScanLightWorker,    0.002
+4, 1024, testScanHeavyWorker,    1.619
+8, 1024, testScanLightWorker,    0.002
+8, 1024, testScanHeavyWorker,    1.452
