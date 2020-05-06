@@ -23,23 +23,23 @@ seq_data_6.columns = ['threads', 'size', 'test', 'time']
 
 
 
-par_data_7 = pd.read_csv("output_t7_par.csv") 
-par_data_7.columns = ['threads', 'size', 'test', 'time']
+par_data_5 = pd.read_csv("output_t5_par.csv") 
+par_data_5.columns = ['threads', 'size', 'test', 'time']
 seq_data_7 = pd.read_csv("output_t7_seq.csv") 
 seq_data_7.columns = ['threads', 'size', 'test', 'time']
 
 
 
-Hmap_par = par_data_7[par_data_7['test'].str.contains("testMapHeavyWorker")]
-Hreduce_par = par_data_6[par_data_6['test'].str.contains("testReduceHeavyWorker")]
+Hmap_par = par_data_5[par_data_5['test'].str.contains("testMapHeavyWorker")]
+Hreduce_par = par_data_6[par_data_6['test'].str.contains("testReduceHeavyWorker") & (par_data_6['threads'] == 16)]
 Hmap_seq = seq_data_7[seq_data_7['test'].str.contains("testMapHeavyWorker")]
 Hreduce_seq = seq_data_6[seq_data_6['test'].str.contains("testReduceHeavyWorker")]
 
 
-Lmap_par = par_data_0[par_data_0['test'].str.contains("testMapLightWorker") and (par_data_0['size'].str.contains("200000000"))]
-Lreduce_par = par_data_0[par_data_0['test'].str.contains("testReduceLightWorker") and (par_data_0['size'].str.contains("200000000"))]
-Lmap_seq = seq_data_0[seq_data_0['test'].str.contains("testMapLightWorker") and (par_data_0['size'].str.contains("200000000"))]
-Lreduce_seq = seq_data_0[seq_data_0['test'].str.contains("testReduceLightWorker") and (par_data_0['size'].str.contains("200000000"))]
+Lmap_par = par_data_0[par_data_0['test'].str.contains("testMapLightWorker") & (par_data_0['size'] == 200000000)]
+Lreduce_par = par_data_0[par_data_0['test'].str.contains("testReduceLightWorker") & (par_data_0['size'] == 200000000)]
+Lmap_seq = seq_data_0[seq_data_0['test'].str.contains("testMapLightWorker") & (par_data_0['size'] == 200000000)]
+Lreduce_seq = seq_data_0[seq_data_0['test'].str.contains("testReduceLightWorker") & (par_data_0['size'] == 200000000)]
 
 
 
