@@ -113,39 +113,37 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
         }
         else{
             tree[current].sum = malloc(sizeJob);
-        }
-        
-        tree[current].fromLeft = calloc(1,sizeJob);      
+        }   
+        tree[current].fromLeft = calloc(1,sizeJob);   
+           
     } else {
         int split = (max-min)/2 + min;
 
         //Create left child
-        if(split-min <= 10000) {
+        if(split-min <= 20000) {
             createTreeNode(tree, 2*current+1, min, split, src, nJob, nPow, sizeJob, worker);
         } else {
-            #pragma omp task
+            #pragma omp task untied
             {
                 createTreeNode(tree, 2*current+1, min, split, src, nJob, nPow, sizeJob, worker);
             }
         }
         
         //Create right child
-        if(max-split <= 10000) {
+        if(max-split <= 20000) {
             createTreeNode(tree, 2*current+2, split, max, src, nJob, nPow, sizeJob, worker);
         } else {
-            #pragma omp task
+            #pragma omp task untied
             {
                 createTreeNode(tree, 2*current+2, split, max, src, nJob, nPow, sizeJob, worker);
             }
         }
         #pragma omp taskwait
 
-        TreeNode nodeLeft  = getLeftChild(tree, current);
-        TreeNode nodeRight = getRightChild(tree, current);
         tree[current].min = min;
         tree[current].max = max;
         tree[current].sum = malloc(sizeJob);
-        worker(tree[current].sum, nodeLeft.sum, nodeRight.sum);
+        worker(tree[current].sum, getLeftChild(tree, current).sum, getRightChild(tree, current).sum);
         tree[current].fromLeft = calloc(1, sizeJob);
     }
 }
@@ -154,33 +152,25 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
 TreeNode * buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     size_t nextPow2 = nextPower_2(nJob);
     TreeNode * tree = (TreeNode *) malloc(sizeof(TreeNode)*(nextPow2*2-1));
-
-    #pragma omp parallel 
-    {
-    #pragma omp single
     createTreeNode(tree, 0, 0, nextPow2, src, nJob, nextPow2, sizeJob, worker);
-    }
     return tree;
 }
 
 
 void updateTreeNode (TreeNode * tree, int current, size_t nJob, int splitSize, size_t sizeJob, void* src, void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
-    TreeNode currentNode = tree[current];
-    TreeNode leftChild = getLeftChild(tree, current);
-    TreeNode rightChild = getRightChild(tree, current);
 
-    memcpy(leftChild.fromLeft, currentNode.fromLeft, sizeJob);
-    worker(rightChild.fromLeft, leftChild.sum, currentNode.fromLeft);
+    memcpy(getLeftChild(tree, current).fromLeft, tree[current].fromLeft, sizeJob);
+    worker(getRightChild(tree, current).fromLeft, getLeftChild(tree, current).sum, tree[current].fromLeft);
 
     if(current*2+1 < nJob-1 || current*2+2 < nJob-1){
         int split = splitSize/2;
 
-        if(split <= 10000) {
-            #pragma omp task
+        if(split <= 20000) {
+            #pragma omp task untied
             {
                 updateTreeNode(tree, current*2+1, nJob, split, sizeJob, src, dest, worker);
             }
-            #pragma omp task
+            #pragma omp task untied
             {
                 updateTreeNode(tree, current*2+2, nJob, split, sizeJob, src, dest, worker);
             }
@@ -195,22 +185,18 @@ void updateTreeNode (TreeNode * tree, int current, size_t nJob, int splitSize, s
 
 void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src , void * dest, void (*worker)(void *v1, const void *v2, const void *v3)) {
     size_t nextPow2 = nextPower_2(nJob);
-    #pragma omp parallel 
-    {
-    #pragma omp single
     updateTreeNode(tree, 0, nextPow2, nextPow2, sizeJob, src, dest, worker);
-    }
 }
 
 void freeTree (TreeNode * tree, int nNodes, int nPow,int nJob) {
 
-    #pragma omp parallel for
+    #pragma omp for
     for(int i = 0; i < nNodes; i++) {
-        TreeNode currentNode = tree[i];
-        free(currentNode.fromLeft);
-        if(!(i >= (nPow-1) && currentNode.min < nJob))
-            free(currentNode.sum);
+        free(tree[i].fromLeft);
+        if(!(i >= (nPow-1) && tree[i].min < nJob))
+            free(tree[i].sum);
     }
+    #pragma omp single
     free(tree);
 }
 
@@ -223,19 +209,26 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     char * s = (char *) src;
     char * d = (char *) dest;
 
-    TreeNode * tree = buildTree (src, nJob, sizeJob, worker);
-    traverseTree (tree, nJob, sizeJob, src, dest, worker);
-
     size_t nextPow2 = nextPower_2(nJob);
     int nNodes = nextPow2 * 2 -1 - nextPow2;
+    TreeNode * tree;
 
-    #pragma omp parallel for
-    for (int i = 0 ; i < nJob; i++){
-        int j = nNodes + i;
-        worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
-    } 
+    #pragma omp parallel 
+    {   
+        #pragma omp single    
+        {
+            tree = buildTree (src, nJob, sizeJob, worker);
+            traverseTree (tree, nJob, sizeJob, src, dest, worker);
+        }
 
-   freeTree(tree, nextPow2*2-1,nextPow2,nJob);
+        #pragma omp for
+        for (int i = 0 ; i < nJob; i++){
+            int j = nNodes + i;
+            worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
+        } 
+
+        freeTree(tree, nextPow2*2-1,nextPow2,nJob);
+    }
 }
 
 
@@ -394,7 +387,7 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     int * flagWorkers = calloc(1, nWorkers*sizeof(int));
     int finished = 0;
 
-    #pragma omp parallel shared(flagWorkers)
+    #pragma omp parallel
     {
         #pragma omp master
         { 
