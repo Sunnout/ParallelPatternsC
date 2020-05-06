@@ -6,6 +6,16 @@
 #include "patterns.h"
 
 
+
+/*----------------------------------- POSITION MACRO --------------------------------*/
+
+#define POS(INDEX, SIZE) calculatePosition(INDEX, SIZE)
+
+int calculatePosition (int i, size_t size) {
+    return i * size;
+}
+
+
 /*------------------------------------ MAP PATTERN ---------------------------------*/
 
 
@@ -18,7 +28,7 @@ void map (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(voi
 
     #pragma omp parallel for
     for (int i = 0; i < nJob; i++) {
-        worker (&d[i * sizeJob], &s[i * sizeJob]);
+        worker (&d[POS(i, sizeJob)], &s[POS(i, sizeJob)]);
     }
 }
 
@@ -44,11 +54,11 @@ void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(
             #pragma omp for
             for (int i = 0; i < nJob; i++) {
                 if(first){
-                    memcpy(&privDest[0], &s[i * sizeJob], sizeJob);
+                    memcpy(&privDest[0], &s[POS(i, sizeJob)], sizeJob);
                     first = 0;
                 }
                 else
-                    worker (&privDest[0], &privDest[0], &s[i * sizeJob]);
+                    worker (&privDest[0], &privDest[0], &s[POS(i, sizeJob)]);
             }
 
             #pragma omp single 
@@ -90,54 +100,46 @@ size_t nextPower_2 (int x) {
 }
 
 
-TreeNode getLeftChild(TreeNode * tree, int parent) {
-    return tree[(2*parent+1)];
-}
-
-
-TreeNode getRightChild(TreeNode * tree, int parent) {
-    return tree[(2*parent+2)];
-}
-
-
 void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, size_t nJob, size_t nPow, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     char * s = (char *) src;
 
     if(current >= nPow-1) {
         if((current-(nPow-1)) < nJob){
-            tree[current].sum = &s[(current-(nPow-1))*sizeJob];
+            tree[current].sum = &s[POS((current-(nPow-1)), sizeJob)];
         }
         else{
             tree[current].sum = &s[0];
         }   
-        tree[current].fromLeft = calloc(1,sizeJob); 
+        tree[current].fromLeft = calloc(1, sizeJob); 
            
     } else {
         int split = (max-min)/2 + min;
+        int left = 2*current+1;
+        int right = 2*current+2;
 
         //Create left child
         if(split-min <= 20000) {
-            createTreeNode(tree, 2*current+1, min, split, src, nJob, nPow, sizeJob, worker);
+            createTreeNode(tree, left, min, split, src, nJob, nPow, sizeJob, worker);
         } else {
             #pragma omp task untied
             {
-                createTreeNode(tree, 2*current+1, min, split, src, nJob, nPow, sizeJob, worker);
+                createTreeNode(tree, left, min, split, src, nJob, nPow, sizeJob, worker);
             }
         }
         
         //Create right child
         if(max-split <= 20000) {
-            createTreeNode(tree, 2*current+2, split, max, src, nJob, nPow, sizeJob, worker);
+            createTreeNode(tree, right, split, max, src, nJob, nPow, sizeJob, worker);
         } else {
             #pragma omp task untied
             {
-                createTreeNode(tree, 2*current+2, split, max, src, nJob, nPow, sizeJob, worker);
+                createTreeNode(tree, right, split, max, src, nJob, nPow, sizeJob, worker);
             }
         }
         #pragma omp taskwait
 
         tree[current].sum = malloc(sizeJob);
-        worker(tree[current].sum, getLeftChild(tree, current).sum, getRightChild(tree, current).sum);
+        worker(tree[current].sum, tree[left].sum, tree[right].sum);
         tree[current].fromLeft = calloc(1, sizeJob);
     }
 }
@@ -145,32 +147,34 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
 
 TreeNode * buildTree (void *src, size_t nJob, size_t sizeJob, void (*worker)(void *v1, const void *v2, const void *v3)) {
     size_t nextPow2 = nextPower_2(nJob);
-    TreeNode * tree = (TreeNode *) malloc(sizeof(TreeNode)*(nextPow2*2-1));
+    TreeNode * tree = (TreeNode *) malloc(sizeof(TreeNode) * (nextPow2*2-1));
     createTreeNode(tree, 0, 0, nextPow2, src, nJob, nextPow2, sizeJob, worker);
     return tree;
 }
 
 
 void updateTreeNode (TreeNode * tree, int current, size_t nJob, int splitSize, size_t sizeJob, void* src, void * dest,void (*worker)(void *v1, const void *v2, const void *v3)) {
+    int left = 2*current+1;
+    int right = 2*current+2;
 
-    memcpy(getLeftChild(tree, current).fromLeft, tree[current].fromLeft, sizeJob);
-    worker(getRightChild(tree, current).fromLeft, getLeftChild(tree, current).sum, tree[current].fromLeft);
+    memcpy(tree[left].fromLeft, tree[current].fromLeft, sizeJob);
+    worker(tree[right].fromLeft, tree[left].sum, tree[current].fromLeft);
 
-    if(current*2+1 < nJob-1 || current*2+2 < nJob-1){
+    if(left < nJob-1 || right < nJob-1){
         int split = splitSize/2;
 
         if(split <= 20000) {
             #pragma omp task untied
             {
-                updateTreeNode(tree, current*2+1, nJob, split, sizeJob, src, dest, worker);
+                updateTreeNode(tree, left, nJob, split, sizeJob, src, dest, worker);
             }
             #pragma omp task untied
             {
-                updateTreeNode(tree, current*2+2, nJob, split, sizeJob, src, dest, worker);
+                updateTreeNode(tree, right, nJob, split, sizeJob, src, dest, worker);
             }
         } else {
-                updateTreeNode(tree, current*2+1, nJob, split, sizeJob, src, dest, worker);
-                updateTreeNode(tree, current*2+2, nJob, split, sizeJob, src, dest, worker);
+                updateTreeNode(tree, left, nJob, split, sizeJob, src, dest, worker);
+                updateTreeNode(tree, right, nJob, split, sizeJob, src, dest, worker);
         }
         
     }
@@ -182,7 +186,7 @@ void traverseTree (TreeNode * tree, size_t nJob, size_t sizeJob, void* src , voi
     updateTreeNode(tree, 0, nextPow2, nextPow2, sizeJob, src, dest, worker);
 }
 
-void freeTree (TreeNode * tree, int nNodes, int nPow,int nJob) {
+void freeTree (TreeNode * tree, int nNodes, int nPow, int nJob) {
 
     #pragma omp for
     for(int i = 0; i < nNodes; i++) {
@@ -204,7 +208,7 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     char * d = (char *) dest;
 
     size_t nextPow2 = nextPower_2(nJob);
-    int nNodes = nextPow2 * 2 -1 - nextPow2;
+    int nNodes = nextPow2 * 2 - 1 - nextPow2;
     TreeNode * tree;
 
     #pragma omp parallel 
@@ -218,10 +222,10 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
         #pragma omp for
         for (int i = 0 ; i < nJob; i++){
             int j = nNodes + i;
-            worker(&d[i*sizeJob], &s[i*sizeJob], tree[j].fromLeft);
+            worker(&d[POS(i, sizeJob)], &s[POS(i, sizeJob)], tree[j].fromLeft);
         } 
 
-        freeTree(tree, nextPow2*2-1,nextPow2,nJob);
+        freeTree(tree, nextPow2*2-1, nextPow2, nJob);
     }
 }
 
@@ -230,7 +234,6 @@ void scan (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
 
 
 void workerPreffixSum(void* a, const void* b, const void* c) {
-    // a = b + c
     *(int *)a = *(int *)b + *(int *)c;
 }
 
@@ -251,9 +254,9 @@ int pack (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter)
     int res = bitsum[(nJob-1)];
     
     #pragma omp parallel for
-    for (int i=0; i < nJob; i++) {
+    for (int i = 0; i < nJob; i++) {
         if (filter[i]) {
-            memcpy (&d[(bitsum[i]-1) * sizeJob], &s[i * sizeJob], sizeJob);
+            memcpy (&d[POS(bitsum[i]-1, sizeJob)], &s[POS(i, sizeJob)], sizeJob);
         }
     }
     free(parallel_preffix);
@@ -275,9 +278,9 @@ void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filt
     char * s = (char *) src;
 
     #pragma omp parallel for
-    for (int i=0; i < nFilter; i++) {
+    for (int i = 0; i < nFilter; i++) {
         assert (filter[i] < nJob);
-        memcpy (&d[i * sizeJob], &s[filter[i] * sizeJob], sizeJob);
+        memcpy (&d[POS(i, sizeJob)], &s[POS(filter[i], sizeJob)], sizeJob);
     }
 }
 
@@ -298,9 +301,9 @@ void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *fil
     char * s = (char *) src;
 
     #pragma omp parallel for
-    for (int i=0; i < nJob; i++) {
+    for (int i = 0; i < nJob; i++) {
         assert (filter[i] < nJob);
-        memcpy (&d[filter[i] * sizeJob], &s[i * sizeJob], sizeJob);
+        memcpy (&d[POS(filter[i], sizeJob)], &s[POS(i, sizeJob)], sizeJob);
     }
 }
 
@@ -350,17 +353,17 @@ void pipeline (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker
         }
         // Initial ramp up and part of the max efficiency sections
         if(a <= nJob) {
-            memcpy (&d[(a-1) * sizeJob], &s[(a-1) * sizeJob], sizeJob); 
+            memcpy (&d[POS(a-1, sizeJob)], &s[POS(a-1, sizeJob)], sizeJob); 
             #pragma omp parallel for
-            for (int  j = 1;  j <= nPoints; j++) {
-                workerList[(j-1)] (&d[(a-j) * sizeJob], &d[(a-j) * sizeJob]);
+            for (int j = 1; j <= nPoints; j++) {
+                workerList[(j-1)] (&d[POS(a-j, sizeJob)], &d[POS(a-j, sizeJob)]);
             }
         } 
         // Part of the max efficiency section and slow down section
         else {
             #pragma omp parallel for
             for (int j = 1; j <= nPoints;  j++) {
-                workerList[(j-1 +(a-nJob))] (&d[(nJob-j) * sizeJob], &d[(nJob-j) * sizeJob]);
+                workerList[(j-1 +(a-nJob))] (&d[POS(nJob-j, sizeJob)], &d[POS(nJob-j, sizeJob)]);
             }
         }
     }
@@ -378,11 +381,13 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     char * d = (char *) dest;
     char * s = (char *) src;
 
-    int * flagWorkers = calloc(1, nWorkers*sizeof(int));
+    int * flagWorkers = calloc(1, nWorkers * sizeof(int));
     int finished = 0;
 
     #pragma omp parallel
     {
+        assert(omp_get_num_threads() >= 2);
+
         #pragma omp master
         { 
             while(finished < nJob) {
@@ -391,7 +396,7 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
                         flagWorkers[j] = 1; 
                         #pragma omp task untied
                         {
-                            worker (&d[finished * sizeJob], &s[finished * sizeJob]);
+                            worker (&d[POS(finished, sizeJob)], &s[POS(finished, sizeJob)]);
                             flagWorkers[j] = 0; 
                         }
                         finished++;

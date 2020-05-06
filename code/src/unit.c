@@ -207,7 +207,7 @@ void validateReduce (void *src, size_t n, size_t size) {
     reduce (dest, src, n, size, workerAdd);
     
     if (seq_dest[0] != dest[0]){
-        printf("Precision ERROR in REDUCE %d", 0);
+        printf("Precision ERROR in REDUCE %d with values: %lf != %lf", 0, seq_dest[0], dest[0]);
     }
     
     free (dest);
@@ -226,7 +226,7 @@ void validateScan (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < n  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("Precision ERROR in SCAN %d with values: %lf ; %lf", i , seq_dest[i],dest[i]);
+            printf("Precision ERROR in SCAN %d with values: %lf != %lf", i, seq_dest[i], dest[i]);
         }
     }
 
@@ -252,7 +252,7 @@ void validatePack (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < nFilter  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("ERROR in PACK %d",i);
+            printf("ERROR in PACK %d", i);
         }
     }
 
