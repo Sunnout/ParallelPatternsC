@@ -25,7 +25,7 @@ seq_data_6.columns = ['threads', 'size', 'test', 'time']
 
 par_data_5 = pd.read_csv("../output/output_t5_par.csv") 
 par_data_5.columns = ['threads', 'size', 'test', 'time']
-seq_data_7 = pd.read_csv("../output/output_t7_seq.csv") 
+seq_data_7 = pd.read_csv("../output/output_t5_seq.csv") 
 seq_data_7.columns = ['threads', 'size', 'test', 'time']
 
 

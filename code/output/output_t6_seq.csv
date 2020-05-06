@@ -1,3 +1,2 @@
 Threads, Array Size, Test, Time
-1, 2000000, testReduceHeavyWorker,    5.737
-Test Time:	  17.222 seconds
+1, 2000000, testReduceHeavyWorker,    6.127
