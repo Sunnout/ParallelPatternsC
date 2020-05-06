@@ -74,8 +74,6 @@ void reduce (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(
 
 typedef struct   
 { 
-  int min;
-  int max;
   char * sum; 
   char * fromLeft;
 } TreeNode;
@@ -106,15 +104,13 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
     char * s = (char *) src;
 
     if(current >= nPow-1) {
-        tree[current].min = current-(nPow-1);
-        tree[current].max = current-(nPow-2);
-        if(tree[current].min < nJob){
-            tree[current].sum = &s[tree[current].min*sizeJob];
+        if((current-(nPow-1)) < nJob){
+            tree[current].sum = &s[(current-(nPow-1))*sizeJob];
         }
         else{
-            tree[current].sum = malloc(sizeJob);
+            tree[current].sum = &s[0];
         }   
-        tree[current].fromLeft = calloc(1,sizeJob);   
+        tree[current].fromLeft = calloc(1,sizeJob); 
            
     } else {
         int split = (max-min)/2 + min;
@@ -140,8 +136,6 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
         }
         #pragma omp taskwait
 
-        tree[current].min = min;
-        tree[current].max = max;
         tree[current].sum = malloc(sizeJob);
         worker(tree[current].sum, getLeftChild(tree, current).sum, getRightChild(tree, current).sum);
         tree[current].fromLeft = calloc(1, sizeJob);
@@ -193,7 +187,7 @@ void freeTree (TreeNode * tree, int nNodes, int nPow,int nJob) {
     #pragma omp for
     for(int i = 0; i < nNodes; i++) {
         free(tree[i].fromLeft);
-        if(!(i >= (nPow-1) && tree[i].min < nJob))
+        if(!(i >= (nPow-1)))
             free(tree[i].sum);
     }
     #pragma omp single
