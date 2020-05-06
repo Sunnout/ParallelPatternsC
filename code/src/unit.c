@@ -174,25 +174,6 @@ static void workerCountPrime(void* a , const void* b){
 */
 
 
-/* WORKERS FOR STRINGS -> NOT WORKING
-static void workerConcat(void* a, const void* b) {
-    // a = a concat b
-    *(TYPE *)a = realloc(*(TYPE *)a, strlen(*(TYPE *)a) + strlen(*(TYPE *)b));
-    strcat(*(TYPE *)a, *(TYPE *)b);
-}
-
-static void workerReplaceFirstWithX(void* a, const void* b) {
-    // replaces first char with x
-
-    strcpy((TYPE) a, (TYPE) b);
-    ((TYPE) a)[0] = "x";
- 
-    printf ("STRING FINAL: %s\n ", (TYPE )a);
-}
-*/
-
-
-
 //=======================================================
 // Validating funtions
 //=======================================================
@@ -10833,7 +10814,7 @@ typedef void (*TESTFUNCTION)(void *, size_t, size_t,int);
 
 
 //=======================================================
-// Tests 0
+// Test 0
 //=======================================================
 
 /*
@@ -10857,7 +10838,7 @@ int nTestFunction0 = sizeof (testFunction0)/sizeof(testFunction0[0]);
 
 
 //=======================================================
-// Tests 1
+// Test 1
 //=======================================================
 
 /*
@@ -10882,7 +10863,7 @@ int nTestFunction1 = sizeof (testFunction1)/sizeof(testFunction1[0]);
 
 
 //=======================================================
-// Tests 2
+// Test 2
 //=======================================================
 
 /*
@@ -10913,15 +10894,15 @@ int nTestFunction2 = sizeof (testFunction2)/sizeof(testFunction2[0]);
 
 
 //=======================================================
-// Tests 3
+// Test 3
 //=======================================================
 
 /* 
-    T3 [Parallel Only
+    bash3 [Parallel Only
     Array sizes (524288 524289 750000 1048576 1048577 1500000 2097152 2097153 3000000 4194304)
     and threads = 16]
 
-    T8 [Parallel and Sequential
+    bash8 [Parallel and Sequential
     Array Size 1M and thread count 1-128]
 */
 
@@ -10938,35 +10919,59 @@ int nTestFunction3 = sizeof (testFunction3)/sizeof(testFunction3[0]);
 
 
 //=======================================================
-// Tests 4
+// Test 4
 //=======================================================
 
 /*
-    Parallel And Sequential
-    Array size 100m and varying Thread count
+    Parallel (seq farm was not the "real farm")
+    Array size 100m and varying thread 2-128
 */
 
 
 TESTFUNCTION testFunction4[] = {
-      testMapLightWorker,
-      testReduceLightWorker,
-      testPipelineLightWorkersLargeNumberOfStations,
-      testFarmLightWorkerLargeNumberOfWorkers
+      testFarmLightWorkerSmallNumberOfWorkers,
+      testFarmLightWorkerMediumNumberOfWorkers,
+      testFarmLightWorkerLargeNumberOfWorkers,
+      testFarmHeavyWorkerSmallNumberOfWorkers,
+      testFarmHeavyWorkerMediumNumberOfWorkers,
+      testFarmHeavyWorkerLargeNumberOfWorkers
 
 };
 
 char *testNames4[] = {
-       "testMapLightWorker",
-       "testReduceLightWorker",
-       "testPipelineLightWorkersLargeNumberOfStations",
-       "testFarmLightWorkerLargeNumberOfWorkers"
+       "testFarmLightWorkerSmallNumberOfWorkers",
+       "testFarmLightWorkerMediumNumberOfWorkers",
+       "testFarmLightWorkerLargeNumberOfWorkers",
+       "testFarmHeavyWorkerSmallNumberOfWorkers",
+       "testFarmHeavyWorkerMediumNumberOfWorkers",
+       "testFarmHeavyWorkerLargeNumberOfWorkers",
 };
 
 int nTestFunction4 = sizeof (testFunction4)/sizeof(testFunction4[0]);
 
 
 //=======================================================
-// Tests 6
+// Test 5
+//=======================================================
+
+/*
+    Parallel And Sequential
+    Array size 2M and 16 Threads
+*/
+
+TESTFUNCTION testFunction5[] = {
+    testMapHeavyWorker,
+};
+
+char *testNames5[] = {
+    "testMapHeavyWorker",
+};
+
+int nTestFunction5 = sizeof (testFunction5)/sizeof(testFunction5[0]);
+
+
+//=======================================================
+// Test 6
 //=======================================================
 
 /*
@@ -10983,23 +10988,3 @@ char *testNames6[] = {
 };
 
 int nTestFunction6 = sizeof (testFunction6)/sizeof(testFunction6[0]);
-
-
-//=======================================================
-// Tests 7
-//=======================================================
-
-/*
-    Parallel And Sequential
-    Array size 2M and 16 Threads
-*/
-
-TESTFUNCTION testFunction7[] = {
-    testMapHeavyWorker,
-};
-
-char *testNames7[] = {
-    "testMapHeavyWorker",
-};
-
-int nTestFunction7 = sizeof (testFunction7)/sizeof(testFunction7[0]);

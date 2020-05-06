@@ -181,6 +181,17 @@ int main(int argc, char* argv[]) {
                         printf ("\n\n");
                 }
             break;
+            case 5:
+                for (int i = 0;  i < nTestFunction5;  i++) {
+                    start = wctime();
+                    for (int j = 0 ; j < 3 ; j++)
+                        testFunction5[i] (src, N, sizeof(*src),seq);
+                    end = wctime();
+                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames5[i], (end-start)/3.0);
+                    if (debug)
+                        printf ("\n\n");
+                }
+            break;
             case 4:
                 for (int i = 0;  i < nTestFunction4;  i++) {
                     start = wctime();
@@ -203,17 +214,7 @@ int main(int argc, char* argv[]) {
                         printf ("\n\n");
                 }
             break;
-            case 7:
-                for (int i = 0;  i < nTestFunction7;  i++) {
-                    start = wctime();
-                    for (int j = 0 ; j < 3 ; j++)
-                        testFunction7[i] (src, N, sizeof(*src),seq);
-                    end = wctime();
-                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames7[i], (end-start)/3.0);
-                    if (debug)
-                        printf ("\n\n");
-                }
-            break;
+
             default:
                 printf("Invalid Test option\n");
                 abort ();

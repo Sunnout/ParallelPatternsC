@@ -1,6 +1,0 @@
-Threads, Array Size, Test, Time
-1, 100000, testMapHeavyWorker,	   0.204 
-1, 100000, testReduceHeavyWorker,	 192.387
-1, 100000, testPackMediumFilterAlternated,	   0.001
-1, 100000, testPipelineMediumWorkersSmallNumberOfStations,	   0.576
-1, 100000, testFarmHeavyWorkerLargeNumberOfWorkers,	   0.198

@@ -1,7 +1,10 @@
 #!/bin/bash
-SIZES=(250 500 1000 2000 5000 10000 15000)
+SIZES=(2000000)
+THREADS=(1)
 
-echo "Threads, Array Size, Test, Time"
 for SZ in "${SIZES[@]}"; do
-    OMP_NUM_THREADS=1 ./main -s -t 5  $SZ
+    echo "Threads, Array Size, Test, Time"
+    for TH in "${THREADS[@]}"; do
+        OMP_NUM_THREADS=$TH ./main -s -t 5 $SZ
+    done
 done | tee output_t5_seq.csv

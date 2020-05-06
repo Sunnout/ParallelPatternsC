@@ -1,5 +1,0 @@
-Threads, Array Size, Test, Time
-1, 100000, testMapLightWorker,	   0.001
-1, 100000, testReduceLightWorker,	   0.000
-1, 100000, testPipelineLightWorkersLargeNumberOfStations,	   1.684
-1, 100000, testFarmLightWorkerLargeNumberOfWorkers,	   0.000
