@@ -192,17 +192,6 @@ int main(int argc, char* argv[]) {
                         printf ("\n\n");
                 }
             break;
-            case 5:
-                for (int i = 0;  i < nTestFunction5;  i++) {
-                    start = wctime();
-                    for (int j = 0 ; j < 3 ; j++)
-                        testFunction5[i] (src, N, sizeof(*src),seq);
-                    end = wctime();
-                    printf ("%d, %d, %s, %8.3lf\n", omp_get_max_threads(), N, testNames5[i], (end-start)/3.0);
-                    if (debug)
-                        printf ("\n\n");
-                }
-            break;
             case 6:
                 for (int i = 0;  i < nTestFunction6;  i++) {
                     start = wctime();

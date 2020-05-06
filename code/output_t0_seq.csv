@@ -1,13 +1,4 @@
 Threads, Array Size, Test, Time
-1, 200000, testMapLightWorker,    0.002
-1, 200000, testReduceLightWorker,    0.001
-1, 500000, testMapLightWorker,    0.003
-1, 500000, testReduceLightWorker,    0.002
-1, 1000000, testMapLightWorker,    0.007
-1, 1000000, testReduceLightWorker,    0.005
-1, 10000000, testMapLightWorker,    0.076
-1, 10000000, testReduceLightWorker,    0.044
-1, 100000000, testMapLightWorker,    0.758
-1, 100000000, testReduceLightWorker,    0.449
-1, 200000000, testMapLightWorker,    1.507
-1, 200000000, testReduceLightWorker,    0.892
+1, 200000000, testMapLightWorker,    3.533
+1, 200000000, testReduceLightWorker,    1.417
+Test Time:	  14.853 seconds

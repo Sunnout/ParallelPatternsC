@@ -1,9 +1,9 @@
 #!/bin/bash
-SIZES=(100000000)
-THREADS=(2 4 8)
+SIZES=(2000)
+THREADS=(1 2 4 8 16 32 64 128)
 
-echo "Threads, Array Size, Test, Time"
 for SZ in "${SIZES[@]}"; do
+    echo "Threads, Array Size, Test, Time"  
     for TH in "${THREADS[@]}"; do
         OMP_NUM_THREADS=$TH ./main -t 2 $SZ
     done

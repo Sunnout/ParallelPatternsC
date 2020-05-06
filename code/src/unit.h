@@ -47,13 +47,6 @@ extern int nTestFunction4;
 
 
 
-extern TESTFUNCTION testFunction5[];
-
-extern char *testNames5[];
-
-extern int nTestFunction5;
-
-
 extern TESTFUNCTION testFunction6[];
 
 extern char *testNames6[];
