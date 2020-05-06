@@ -11,7 +11,7 @@ import numpy as np
 # Read data from file 'filename.csv' 
 # (in the same directory that your python process is based)
 # Control delimiters, rows, column names with read_csv (see later) 
-par_data = pd.read_csv("output_t3_par.csv") 
+par_data = pd.read_csv("../output/output_t3_par.csv") 
 par_data.columns = ['threads', 'size', 'test', 'time']
 
 
@@ -28,5 +28,5 @@ plt.xlabel("Input Size")
 plt.ylabel("Runtime (seconds)")
 plt.legend()
 plt.title("Stair Effect in Scan Pattern")
-plt.savefig('plots/test3_runtime.png')
+plt.savefig('../plots/stairscan.png')
 plt.close()

@@ -9,23 +9,23 @@ import numpy as np
 # Read data from file 'filename.csv' 
 # (in the same directory that your python process is based)
 # Control delimiters, rows, column names with read_csv (see later) 
-par_data_0 = pd.read_csv("output_t0_par.csv") 
+par_data_0 = pd.read_csv("../output/output_t0_par.csv") 
 par_data_0.columns = ['threads', 'size', 'test', 'time']
-seq_data_0 = pd.read_csv("output_t0_seq.csv") 
+seq_data_0 = pd.read_csv("../output/output_t0_seq.csv") 
 seq_data_0.columns = ['threads', 'size', 'test', 'time']
 
 
-par_data_6 = pd.read_csv("output_t6_par.csv") 
+par_data_6 = pd.read_csv("../output/output_t6_par.csv") 
 par_data_6.columns = ['threads', 'size', 'test', 'time']
-seq_data_6 = pd.read_csv("output_t6_seq.csv") 
+seq_data_6 = pd.read_csv("../output/output_t6_seq.csv") 
 seq_data_6.columns = ['threads', 'size', 'test', 'time']
 
 
 
 
-par_data_5 = pd.read_csv("output_t5_par.csv") 
+par_data_5 = pd.read_csv("../output/output_t5_par.csv") 
 par_data_5.columns = ['threads', 'size', 'test', 'time']
-seq_data_7 = pd.read_csv("output_t7_seq.csv") 
+seq_data_7 = pd.read_csv("../output/output_t7_seq.csv") 
 seq_data_7.columns = ['threads', 'size', 'test', 'time']
 
 
@@ -65,3 +65,5 @@ plt.bar(x=["Light Map", "Heavy Map", "Light Reduce", "Heavy reduce"],height=spee
 plt.title("Time SpeedUp with Light vs Heavy Workers")
 plt.ylabel("Time SpeedUp")
 plt.show()
+#plt.savefig('../plots/mapreduce.png')
+

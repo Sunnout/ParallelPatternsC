@@ -9,7 +9,7 @@ import numpy as np
 # Read data from file 'filename.csv' 
 # (in the same directory that your python process is based)
 # Control delimiters, rows, column names with read_csv (see later) 
-par_data = pd.read_csv("output_t2_par.csv") 
+par_data = pd.read_csv("../output/output_t2_par.csv") 
 par_data.columns = ['threads', 'size', 'test', 'time']
 
 
@@ -45,7 +45,7 @@ plt.ylabel("Runtime (seconds)")
 plt.legend()
 plt.title("Runtime for different number of Threads")
 plt.show()
-#plt.savefig('plots/test2_runtime.png')
+#plt.savefig('../plots/runtimepp.png')
 plt.close()
 
 
