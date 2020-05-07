@@ -6,7 +6,6 @@
 #include "patterns.h"
 
 
-
 /*----------------------------------- POSITION MACRO --------------------------------*/
 
 #define POS(INDEX, SIZE) calculatePosition(INDEX, SIZE)
@@ -15,6 +14,15 @@ int calculatePosition (int i, size_t size) {
     return i * size;
 }
 
+/*----------------------------------- CACHE PADDING --------------------------------*/
+
+//Because in 64bit arch we need 16 ints worth of padding
+#define PADDING 17
+
+
+//=======================================================
+// PATTERNS
+//=======================================================
 
 /*------------------------------------ MAP PATTERN ---------------------------------*/
 
@@ -381,7 +389,7 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     char * d = (char *) dest;
     char * s = (char *) src;
 
-    int * flagWorkers = calloc(1, nWorkers * sizeof(int));
+    int * flagWorkers = calloc(1, (nWorkers + PADDING) * sizeof(int));
     int finished = 0;
 
     #pragma omp parallel
@@ -392,12 +400,12 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
         { 
             while(finished < nJob) {
                 for(int j = 0; j < nWorkers && finished < nJob; j++){
-                    if (!flagWorkers[j]){
-                        flagWorkers[j] = 1; 
+                    if (!flagWorkers[j+PADDING]){
+                        flagWorkers[j+PADDING] = 1; 
                         #pragma omp task untied
                         {
                             worker (&d[POS(finished, sizeJob)], &s[POS(finished, sizeJob)]);
-                            flagWorkers[j] = 0; 
+                            flagWorkers[j+PADDING] = 0; 
                         }
                         finished++;
                     }
