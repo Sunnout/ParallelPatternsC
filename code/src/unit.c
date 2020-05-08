@@ -143,6 +143,11 @@ static void workerAddOnePipeline(void* a, const void* b) {
      *(TYPE *)a = *(TYPE *)b + 1;
 }
 
+static void workerAddOneFarm(void* a, const void* b) {
+    for(int i = 0; i < 500000; i++){;}
+     *(TYPE *)a = *(TYPE *)b + 1;
+}
+
 static void workerAddOneMedium(void* a, const void* b) {
     for(int i = 0; i < 350; i++){;}
      *(TYPE *)a = *(TYPE *)b + 1;
@@ -10761,9 +10766,9 @@ Testing Farm with light worker and large number of workers
 void testFarmLightWorkerLargeNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerDivTwo, 128);
+        seq_farm (dest, src, n, size, workerDivTwo, 64);
     else
-        farm (dest, src, n, size, workerDivTwo, 128);
+        farm (dest, src, n, size, workerDivTwo, 64);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10774,9 +10779,9 @@ Testing Farm with heavy worker and small number of workers
 void testFarmHeavyWorkerSmallNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerAddOneHeavy, 8);
+        seq_farm (dest, src, n, size, workerAddOneFarm, 8);
     else
-        farm (dest, src, n, size, workerAddOneHeavy, 8);
+        farm (dest, src, n, size, workerAddOneFarm, 8);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10787,9 +10792,9 @@ Testing Farm with heavy worker and medium number of workers
 void testFarmHeavyWorkerMediumNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerAddOneHeavy, 32);
+        seq_farm (dest, src, n, size, workerAddOneFarm, 32);
     else
-        farm (dest, src, n, size, workerAddOneHeavy, 32);
+        farm (dest, src, n, size, workerAddOneFarm, 32);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10800,9 +10805,9 @@ Testing Farm with heavy worker and large number of workers
 void testFarmHeavyWorkerLargeNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerAddOneHeavy, 128);
+        seq_farm (dest, src, n, size, workerAddOneFarm, 64);
     else
-        farm (dest, src, n, size, workerAddOneHeavy, 128);
+        farm (dest, src, n, size, workerAddOneFarm, 64);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }

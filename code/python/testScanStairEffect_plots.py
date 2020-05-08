@@ -1,16 +1,8 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 import pandas as pd 
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-import numpy as np
 
 
-
-# Read data from file 'filename.csv' 
-# (in the same directory that your python process is based)
-# Control delimiters, rows, column names with read_csv (see later) 
 par_data = pd.read_csv("../output/output_t3_par.csv") 
 par_data.columns = ['threads', 'size', 'test', 'time']
 
