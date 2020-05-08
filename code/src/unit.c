@@ -10867,7 +10867,7 @@ int nTestFunction1 = sizeof (testFunction1)/sizeof(testFunction1[0]);
 //=======================================================
 
 /*
-    Parallel (seq pipeline was not the "real pipeline")
+    Parallel and sequential
     Array size 2m and varying thread 1-128
 */
 
@@ -10875,18 +10875,12 @@ TESTFUNCTION testFunction2[] = {
       testPipelineLightWorkersSmallNumberOfStations,
       testPipelineLightWorkersMediumNumberOfStations,
       testPipelineLightWorkersLargeNumberOfStations,
-      testPipelineHeavyWorkersSmallNumberOfStations,
-      testPipelineHeavyWorkersMediumNumberOfStations,
-      testPipelineHeavyWorkersLargeNumberOfStations,
 };
 
 char *testNames2[] = {
        "testPipelineLightWorkersSmallNumberOfStations",
        "testPipelineLightWorkersMediumNumberOfStations",
        "testPipelineLightWorkersLargeNumberOfStations",
-       "testPipelineHeavyWorkersSmallNumberOfStations",
-       "testPipelineHeavyWorkersMediumNumberOfStations",
-       "testPipelineHeavyWorkersLargeNumberOfStations",
 };
 
 int nTestFunction2 = sizeof (testFunction2)/sizeof(testFunction2[0]);
@@ -10949,7 +10943,7 @@ int nTestFunction4 = sizeof (testFunction4)/sizeof(testFunction4[0]);
 
 /*
     Parallel And Sequential
-    Array size 2M and 16 Threads
+    Array size 20m and 32 Threads
 */
 
 TESTFUNCTION testFunction5[] = {
@@ -10969,7 +10963,7 @@ int nTestFunction5 = sizeof (testFunction5)/sizeof(testFunction5[0]);
 
 /*
     Parallel And Sequential
-    Array size 2M and thread 2-128
+    Array size 5m and thread 2-128
 */
 
 TESTFUNCTION testFunction6[] = {
@@ -11006,3 +11000,26 @@ char *testNames8[] = {
 };
 
 int nTestFunction8 = sizeof (testFunction8)/sizeof(testFunction8[0]);
+
+//=======================================================
+// Test 9
+//=======================================================
+
+/*
+    Parallel and seq
+    Array size 2m and varying thread 1-128
+*/
+
+TESTFUNCTION testFunction9[] = {
+      testPipelineHeavyWorkersSmallNumberOfStations,
+      testPipelineHeavyWorkersMediumNumberOfStations,
+      testPipelineHeavyWorkersLargeNumberOfStations,
+};
+
+char *testNames9[] = {
+       "testPipelineHeavyWorkersSmallNumberOfStations",
+       "testPipelineHeavyWorkersMediumNumberOfStations",
+       "testPipelineHeavyWorkersLargeNumberOfStations",
+};
+
+int nTestFunction9 = sizeof (testFunction9)/sizeof(testFunction9[0]);

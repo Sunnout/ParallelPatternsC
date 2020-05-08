@@ -9,9 +9,9 @@ import numpy as np
 # Read data from file 'filename.csv' 
 # (in the same directory that your python process is based)
 # Control delimiters, rows, column names with read_csv (see later) 
-par_data_8 = pd.read_csv("../output/output_t8_par.csv") 
+par_data_8 = pd.read_csv("../output/output_t7_par.csv") 
 par_data_8.columns = ['threads', 'size', 'test', 'time']
-seq_data_8 = pd.read_csv("../output/output_t8_seq.csv") 
+seq_data_8 = pd.read_csv("../output/output_t7_seq.csv") 
 seq_data_8.columns = ['threads', 'size', 'test', 'time']
 
 s = par_data_8[par_data_8['threads'] == 1]
