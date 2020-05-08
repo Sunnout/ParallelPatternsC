@@ -10823,7 +10823,7 @@ typedef void (*TESTFUNCTION)(void *, size_t, size_t,int);
 
 /*
     Parallel And Sequential
-    Array size 200M and 16 Threads
+    Array size 200M and 32 Threads
 */
 
 TESTFUNCTION testFunction0[] = {
@@ -10872,7 +10872,7 @@ int nTestFunction1 = sizeof (testFunction1)/sizeof(testFunction1[0]);
 
 /*
     Parallel and sequential
-    Array size 5m and varying thread 1-128
+    Array size 50m and varying thread 1-128
 */
 
 TESTFUNCTION testFunction2[] = {
@@ -10901,7 +10901,7 @@ int nTestFunction2 = sizeof (testFunction2)/sizeof(testFunction2[0]);
     and threads = 16]
 
     bash7 [Parallel and Sequential
-    Array Size 2m, workerHeavy and thread count 1-128]
+    Array Size 100, workerHeavy and thread count 1-128]
 */
 
 TESTFUNCTION testFunction3[] = {
