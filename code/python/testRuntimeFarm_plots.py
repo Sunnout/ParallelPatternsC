@@ -9,15 +9,18 @@ import numpy as np
 # Read data from file 'filename.csv' 
 # (in the same directory that your python process is based)
 # Control delimiters, rows, column names with read_csv (see later) 
-par_data = pd.read_csv("../output/output_t4_par.csv") 
+par_data = pd.read_csv("../output/output_t8_par.csv") 
 par_data.columns = ['threads', 'size', 'test', 'time']
 
- 
-testFarmLightWorkerSmallNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmLightWorkerSmallNumberOfWorkers")]
+seq_data = pd.read_csv("../output/output_t8_seq.csv") 
+seq_data.columns = ['threads', 'size', 'test', 'time']
 
-testFarmLightWorkerMediumNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmLightWorkerMediumNumberOfWorkers")]
 
-testFarmLightWorkerLargeNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmLightWorkerLargeNumberOfWorkers")]
+HfarmS_seq = seq_data[seq_data['test'].str.contains("testFarmHeavyWorkerSmallNumberOfWorkers")]
+HfarmM_seq = seq_data[seq_data['test'].str.contains("testFarmHeavyWorkerMediumNumberOfWorkers")]
+HfarmL_seq = seq_data[seq_data['test'].str.contains("testFarmHeavyWorkerLargeNumberOfWorkers")]
+
+
 
 testFarmHeavyWorkerSmallNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerSmallNumberOfWorkers")]
 
@@ -26,16 +29,14 @@ testFarmHeavyWorkerMediumNumberOfWorkers_par = par_data[par_data['test'].str.con
 testFarmHeavyWorkerLargeNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerLargeNumberOfWorkers")]
 
 
-
-
+sS = [HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0]]
+sM = [HfarmM_seq['time'].values[0],HfarmM_seq['time'].values[0],HfarmM_seq['time'].values[0],HfarmM_seq['time'].values[0],HfarmM_seq['time'].values[0],HfarmM_seq['time'].values[0],HfarmM_seq['time'].values[0]]
+sL = [HfarmL_seq['time'].values[0],HfarmL_seq['time'].values[0],HfarmL_seq['time'].values[0],HfarmL_seq['time'].values[0],HfarmL_seq['time'].values[0],HfarmL_seq['time'].values[0],HfarmL_seq['time'].values[0]]
 
 plt.figure(1, figsize=(12,8))
-plt.plot(testFarmLightWorkerSmallNumberOfWorkers_par['threads'], testFarmLightWorkerSmallNumberOfWorkers_par['time'], '-ro', label="testFarmLightWorkerSmallNumberOfWorkers")
-plt.plot(testFarmLightWorkerMediumNumberOfWorkers_par['threads'], testFarmLightWorkerMediumNumberOfWorkers_par['time'], '-og', label="testFarmLightWorkerMediumNumberOfWorkersd")
-plt.plot(testFarmLightWorkerLargeNumberOfWorkers_par['threads'], testFarmLightWorkerLargeNumberOfWorkers_par['time'], '-ob', label="testFarmLightWorkerLargeNumberOfWorkers")
-plt.plot(testFarmHeavyWorkerSmallNumberOfWorkers_par['threads'], testFarmHeavyWorkerSmallNumberOfWorkers_par['time'], '-r', label="testFarmHeavyWorkerSmallNumberOfWorkers")
-plt.plot(testFarmHeavyWorkerMediumNumberOfWorkers_par['threads'], testFarmHeavyWorkerMediumNumberOfWorkers_par['time'], '-g', label="testFarmHeavyWorkerMediumNumberOfWorkers")
-plt.plot(testFarmHeavyWorkerLargeNumberOfWorkers_par['threads'], testFarmHeavyWorkerLargeNumberOfWorkers_par['time'], '-b', label="testFarmHeavyWorkerLargeNumberOfWorkers")
+plt.plot(testFarmHeavyWorkerSmallNumberOfWorkers_par['threads'], sS/testFarmHeavyWorkerSmallNumberOfWorkers_par['time'], '-ro', label="testFarmHeavyWorkerSmallNumberOfWorkers")
+plt.plot(testFarmHeavyWorkerMediumNumberOfWorkers_par['threads'], sM/testFarmHeavyWorkerMediumNumberOfWorkers_par['time'], '-go', label="testFarmHeavyWorkerMediumNumberOfWorkers")
+plt.plot(testFarmHeavyWorkerLargeNumberOfWorkers_par['threads'], sL/testFarmHeavyWorkerLargeNumberOfWorkers_par['time'], '-bo', label="testFarmHeavyWorkerLargeNumberOfWorkers")
 
 
 plt.ylim(bottom=0)

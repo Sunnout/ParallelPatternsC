@@ -23,13 +23,30 @@ s = [s['time'].values[0],s['time'].values[0],s['time'].values[0],s['time'].value
 plt.figure(1, figsize=(12,8))
 plt.plot(par_data_8['threads'], s/par_data_8['time'].values, '-ro', label="Scan Heavy Worker")
 plt.ylim(bottom=0)
-plt.xlabel("Number of Threads")
+plt.xlabel("Number of Threads \n Input size = 2k")
 plt.ylabel("SpeedUp")
 plt.legend()
-plt.title("Scalability for different number of Threads with Input = 1M")
+plt.title("Scalability for different number of Threads")
 plt.show()
 #plt.savefig('../plots/scalescan.png')
 plt.close()
 
 
+
+
+s = [seq_data_8['time'].values[0],seq_data_8['time'].values[0],seq_data_8['time'].values[0],seq_data_8['time'].values[0],seq_data_8['time'].values[0],seq_data_8['time'].values[0],seq_data_8['time'].values[0],seq_data_8['time'].values[0]]
+
+
+
+plt.figure(1, figsize=(12,8))
+plt.plot(par_data_8['threads'], par_data_8['time'].values, '-ro', label="Parallel Scan Heavy Worker")
+plt.plot(par_data_8['threads'], s, '-g', label="Sequential Scan Heavy Worker")
+plt.ylim(bottom=0)
+plt.xlabel("Number of Threads \n Input size = 2k")
+plt.ylabel("Runtime(seconds")
+plt.legend()
+plt.title("Runtime for varying number of threads ")
+plt.show()
+#plt.savefig('../plots/timescan.png')
+plt.close()
 

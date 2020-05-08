@@ -1,0 +1,8 @@
+Threads, Array Size, Test, Time
+2, 2000000, testReduceHeavyWorker,    3.063
+4, 2000000, testReduceHeavyWorker,    1.562
+8, 2000000, testReduceHeavyWorker,    0.806
+16, 2000000, testReduceHeavyWorker,    0.492
+32, 2000000, testReduceHeavyWorker,    0.260
+64, 2000000, testReduceHeavyWorker,    0.164
+128, 2000000, testReduceHeavyWorker,    0.178

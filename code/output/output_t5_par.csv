@@ -1,2 +1,2 @@
 Threads, Array Size, Test, Time
-16, 2000000, testMapHeavyWorker,    0.491
+32, 20000, testMapHeavyWorker,    0.266

@@ -1,0 +1,4 @@
+Threads, Array Size, Test, Time
+1, 50000, testPipelineLightWorkersSmallNumberOfStations,    0.007
+1, 50000, testPipelineLightWorkersMediumNumberOfStations,    0.258
+1, 50000, testPipelineLightWorkersLargeNumberOfStations,    2.424
