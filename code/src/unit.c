@@ -134,7 +134,7 @@ static void workerDivTwo(void* a, const void* b) {
 }
 
 static void workerAddOneHeavy(void* a, const void* b) {
-    for(int i = 0; i < 1000; i++){;}
+    for(int i = 0; i < 100000; i++){;}
      *(TYPE *)a = *(TYPE *)b + 1;
 }
 
@@ -144,7 +144,7 @@ static void workerAddOneMedium(void* a, const void* b) {
 }
 
 static void workerAddHeavy(void* a, const void* b, const void* c) {
-    for(int i = 0; i < 1000; i++){;}
+    for(int i = 0; i < 1000000; i++){;}
     *(TYPE *)a = *(TYPE *)b + *(TYPE *)c;
 }
 
@@ -10731,9 +10731,9 @@ Testing Farm with light worker and small number of workers
 void testFarmLightWorkerSmallNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerDivTwo, 2);
+        seq_farm (dest, src, n, size, workerDivTwo, 8);
     else
-        farm (dest, src, n, size, workerDivTwo, 2);
+        farm (dest, src, n, size, workerDivTwo, 8);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10744,9 +10744,9 @@ Testing Farm with light worker and medium number of workers
 void testFarmLightWorkerMediumNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerDivTwo, 4);
+        seq_farm (dest, src, n, size, workerDivTwo, 32);
     else
-        farm (dest, src, n, size, workerDivTwo, 4);
+        farm (dest, src, n, size, workerDivTwo, 32);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10757,9 +10757,9 @@ Testing Farm with light worker and large number of workers
 void testFarmLightWorkerLargeNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerDivTwo, 16);
+        seq_farm (dest, src, n, size, workerDivTwo, 128);
     else
-        farm (dest, src, n, size, workerDivTwo, 16);
+        farm (dest, src, n, size, workerDivTwo, 128);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10770,9 +10770,9 @@ Testing Farm with heavy worker and small number of workers
 void testFarmHeavyWorkerSmallNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerAddOneHeavy, 2);
+        seq_farm (dest, src, n, size, workerAddOneHeavy, 8);
     else
-        farm (dest, src, n, size, workerAddOneHeavy, 2);
+        farm (dest, src, n, size, workerAddOneHeavy, 8);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10783,9 +10783,9 @@ Testing Farm with heavy worker and medium number of workers
 void testFarmHeavyWorkerMediumNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerAddOneHeavy, 4);
+        seq_farm (dest, src, n, size, workerAddOneHeavy, 32);
     else
-        farm (dest, src, n, size, workerAddOneHeavy, 4);
+        farm (dest, src, n, size, workerAddOneHeavy, 32);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10796,9 +10796,9 @@ Testing Farm with heavy worker and large number of workers
 void testFarmHeavyWorkerLargeNumberOfWorkers (void *src, size_t n, size_t size,int seq) {
     TYPE *dest = malloc (n * size);
     if(seq)
-        seq_farm (dest, src, n, size, workerAddOneHeavy, 16);
+        seq_farm (dest, src, n, size, workerAddOneHeavy, 128);
     else
-        farm (dest, src, n, size, workerAddOneHeavy, 16);
+        farm (dest, src, n, size, workerAddOneHeavy, 128);
     PRINT (dest, n, __FUNCTION__);
     free (dest);
 }
@@ -10902,8 +10902,8 @@ int nTestFunction2 = sizeof (testFunction2)/sizeof(testFunction2[0]);
     Array sizes (524288 524289 750000 1048576 1048577 1500000 2097152 2097153 3000000 4194304)
     and threads = 16]
 
-    bash8 [Parallel and Sequential
-    Array Size 1M and thread count 1-128]
+    bash7 [Parallel and Sequential
+    Array Size 2m, workerHeavy and thread count 1-128]
 */
 
 TESTFUNCTION testFunction3[] = {
@@ -10923,8 +10923,8 @@ int nTestFunction3 = sizeof (testFunction3)/sizeof(testFunction3[0]);
 //=======================================================
 
 /*
-    Parallel (seq farm was not the "real farm")
-    Array size 100m and varying thread 2-128
+    Parallel and sequential
+    Array size 1M and varying thread 2-128
 */
 
 
@@ -10932,19 +10932,12 @@ TESTFUNCTION testFunction4[] = {
       testFarmLightWorkerSmallNumberOfWorkers,
       testFarmLightWorkerMediumNumberOfWorkers,
       testFarmLightWorkerLargeNumberOfWorkers,
-      testFarmHeavyWorkerSmallNumberOfWorkers,
-      testFarmHeavyWorkerMediumNumberOfWorkers,
-      testFarmHeavyWorkerLargeNumberOfWorkers
-
 };
 
 char *testNames4[] = {
        "testFarmLightWorkerSmallNumberOfWorkers",
        "testFarmLightWorkerMediumNumberOfWorkers",
        "testFarmLightWorkerLargeNumberOfWorkers",
-       "testFarmHeavyWorkerSmallNumberOfWorkers",
-       "testFarmHeavyWorkerMediumNumberOfWorkers",
-       "testFarmHeavyWorkerLargeNumberOfWorkers",
 };
 
 int nTestFunction4 = sizeof (testFunction4)/sizeof(testFunction4[0]);
@@ -10988,3 +10981,28 @@ char *testNames6[] = {
 };
 
 int nTestFunction6 = sizeof (testFunction6)/sizeof(testFunction6[0]);
+
+//=======================================================
+// Test 8
+//=======================================================
+
+/*
+    Parallel and sequential
+    Array size 20m, heavyWorkers and varying thread 2-128
+*/
+
+
+TESTFUNCTION testFunction8[] = {
+      testFarmHeavyWorkerSmallNumberOfWorkers,
+      testFarmHeavyWorkerMediumNumberOfWorkers,
+      testFarmHeavyWorkerLargeNumberOfWorkers
+
+};
+
+char *testNames8[] = {
+       "testFarmHeavyWorkerSmallNumberOfWorkers",
+       "testFarmHeavyWorkerMediumNumberOfWorkers",
+       "testFarmHeavyWorkerLargeNumberOfWorkers",
+};
+
+int nTestFunction8 = sizeof (testFunction8)/sizeof(testFunction8[0]);

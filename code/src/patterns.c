@@ -17,7 +17,7 @@ int calculatePosition (int i, size_t size) {
 /*----------------------------------- CACHE PADDING --------------------------------*/
 
 //Because in 64bit arch we need 16 ints worth of padding
-#define PADDING 17
+#define PADDING 16
 
 
 //=======================================================
@@ -389,7 +389,7 @@ void farm (void *dest, void *src, size_t nJob, size_t sizeJob, void (*worker)(vo
     char * d = (char *) dest;
     char * s = (char *) src;
 
-    int * flagWorkers = calloc(1, (nWorkers + PADDING) * sizeof(int));
+    int * flagWorkers = calloc(1, (nWorkers + ((PADDING-1) * nWorkers-1)) * sizeof(int));
     int finished = 0;
 
     #pragma omp parallel

@@ -38,6 +38,10 @@ extern TESTFUNCTION testFunction6[];
 extern char *testNames6[];
 extern int nTestFunction6;
 
+extern TESTFUNCTION testFunction8[];
+extern char *testNames8[];
+extern int nTestFunction8;
+
 
 //VALIDATING
 typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
