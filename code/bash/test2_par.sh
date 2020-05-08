@@ -1,5 +1,5 @@
 #!/bin/bash
-SIZES=(200000)
+SIZES=(5000)
 THREADS=(1 2 4 8 16 32 64 128)
 
 for SZ in "${SIZES[@]}"; do
