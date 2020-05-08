@@ -1,6 +1,6 @@
 #!/bin/bash
 SIZES=(200000000)  
-THREADS=(16)
+THREADS=(32)
 
 for TH in "${THREADS[@]}"; do
     echo "Threads, Array Size, Test, Time"
