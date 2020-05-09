@@ -1,6 +1,11 @@
 #ifndef __PATTERNS_H
 #define __PATTERNS_H
 
+/*----------------------------------- SCATTER MACRO --------------------------------*/
+
+//#define scatter(dest, src, n, size, filter) scatterAtomic(dest, src, n, size, filter)
+#define scatter(dest, src, n, size, filter) scatterNotAtomic(dest, src, n, size, filter)
+
 
 void map (
   void *dest,           // Target array

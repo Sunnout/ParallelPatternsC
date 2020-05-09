@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
         printf ("\n\n");
 
     
-    double TEST_TIME_START = wctime();
+   // double TEST_TIME_START = wctime();
         double start,end ;
          switch(t){
              case 0:
@@ -242,11 +242,8 @@ int main(int argc, char* argv[]) {
          }
       
     
-    double TEST_TIME_END = wctime();
-    printf ("%s:\t%8.3lf seconds\n", "Test Time", TEST_TIME_END-TEST_TIME_START);
-
-    
-    
+  //  double TEST_TIME_END = wctime();
+  //  printf ("%s:\t%8.3lf seconds\n", "Test Time", TEST_TIME_END-TEST_TIME_START);
 
     free (src);
     

@@ -299,7 +299,7 @@ void gather (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filt
 /**
  * WARNING - This implementation of scatter is non deterministic when the filter array contains repeatead elements
  **/
-void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
+void scatterNotAtomic (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
     assert (dest != NULL);
     assert (src != NULL);
     assert (filter != NULL);
@@ -313,6 +313,32 @@ void scatter (void *dest, void *src, size_t nJob, size_t sizeJob, const int *fil
         assert (filter[i] < nJob);
         memcpy (&d[POS(filter[i], sizeJob)], &s[POS(i, sizeJob)], sizeJob);
     }
+}
+
+
+/**
+ * WARNING - This implementation of scatter is non deterministic when the filter array contains repeatead elements
+ **/
+void scatterAtomic (void *dest, void *src, size_t nJob, size_t sizeJob, const int *filter) {
+    assert (dest != NULL);
+    assert (src != NULL);
+    assert (filter != NULL);
+    assert (nJob >= 0);
+    assert (sizeJob > 0);
+    char * d = (char *) dest;
+    char * s = (char *) src;
+    int * flags = calloc(1, nJob * sizeof(int));
+
+    #pragma omp parallel for
+    for (int i = 0; i < nJob; i++) {
+        assert (filter[i] < nJob);
+        #pragma omp atomic
+        flags[filter[i]] = flags[filter[i]] + 1;
+        if(flags[filter[i]]) {
+             memcpy (&d[POS(filter[i], sizeJob)], &s[POS(i, sizeJob)], sizeJob);
+        }
+    }
+    free(flags);
 }
 
 

@@ -9,12 +9,18 @@
 #include "unit.h"
 
 
+/*----------------------------------- SCATTER MACRO --------------------------------*/
+
+//#define scatter(dest, src, n, size, filter) scatterAtomic(dest, src, n, size, filter)
+#define scatter(dest, src, n, size, filter) scatterNotAtomic(dest, src, n, size, filter)
+
+
 //Define the data type: 1 -> double; 2 -> long; 3 -> int; 4 -> String (doesn't fully work);
 #define TYPE_SET 1
 
 
 #if TYPE_SET == 1
-//=======================================================
+//======================================================
 // TYPE DOUBLE
 //=======================================================
 
@@ -10851,18 +10857,16 @@ int nTestFunction0 = sizeof (testFunction0)/sizeof(testFunction0[0]);
 //=======================================================
 
 /*
-    Parallel
-    Array size 100M and threads 1-128
+    Parallel and Sequential
+    Array size 200M and threads 2-128
 */
 
 TESTFUNCTION testFunction1[] = {
-    testMapLightWorker,
     testGatherMediumFilter,
     testScatterMediumFilter,
 };
 
 char *testNames1[] = {
-    "testMapLightWorker",
     "testGatherMediumFilter",
     "testScatterMediumFilter",
     };
