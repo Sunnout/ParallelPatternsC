@@ -7,9 +7,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-# Read data from file 'filename.csv' 
-# (in the same directory that your python process is based)
-# Control delimiters, rows, column names with read_csv (see later) 
 par_data = pd.read_csv("../output/output_t8_par.csv") 
 par_data.columns = ['threads', 'size', 'test', 'time']
 
@@ -23,11 +20,11 @@ HfarmL_seq = seq_data[seq_data['test'].str.contains("testFarmHeavyWorkerLargeNum
 
 
 
-testFarmHeavyWorkerSmallNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerSmallNumberOfWorkers")]
+testFarmHeavyWorkerSmallNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerSmallNumberOfWorkers") & (par_data['threads'] != 1)]
 
-testFarmHeavyWorkerMediumNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerMediumNumberOfWorkers")]
+testFarmHeavyWorkerMediumNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerMediumNumberOfWorkers") & (par_data['threads'] != 1)]
 
-testFarmHeavyWorkerLargeNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerLargeNumberOfWorkers")]
+testFarmHeavyWorkerLargeNumberOfWorkers_par = par_data[par_data['test'].str.contains("testFarmHeavyWorkerLargeNumberOfWorkers") & (par_data['threads'] != 1)]
 
 
 sS = [HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0],HfarmS_seq['time'].values[0]]
@@ -40,15 +37,15 @@ sL = [HfarmL_seq['time'].values[0],HfarmL_seq['time'].values[0],HfarmL_seq['time
 font = {'fontname':'Arial'}
 plt.figure(1, figsize=(12,8))
 plt.plot(testFarmHeavyWorkerSmallNumberOfWorkers_par['threads'], sS/testFarmHeavyWorkerSmallNumberOfWorkers_par['time'],color='darkorange', linewidth=2, marker='D', linestyle='-', label="Farm with 8 workers")
-plt.plot(testFarmHeavyWorkerMediumNumberOfWorkers_par['threads'], sM/testFarmHeavyWorkerMediumNumberOfWorkers_par['time'],color='olivedrab', linewidth=2, marker='D', linestyle='-', label="Farm with 32 workers")
+plt.plot(testFarmHeavyWorkerMediumNumberOfWorkers_par['threads'], sM/testFarmHeavyWorkerMediumNumberOfWorkers_par['time'],color='green', linewidth=2, marker='D', linestyle='-', label="Farm with 32 workers")
 plt.plot(testFarmHeavyWorkerLargeNumberOfWorkers_par['threads'], sL/testFarmHeavyWorkerLargeNumberOfWorkers_par['time'], color='saddlebrown', linewidth=2, marker='D', linestyle='-', label="Farm with 64 workers")
 plt.axis([None, None, None, 60])
 plt.xlabel("Number of Threads \n \n Input Size: 20k", **font)
 plt.ylabel("Time Speedup", **font)
-plt.title("Time Speedup for Farm with heavy jobs and varying number of workers", **font)
+plt.title("Time Speedup of Farm with heavy jobs", **font)
 plt.legend()
 #plt.show()
-plt.savefig('../plots/speedUpFarmHeavy.eps', format='eps')
+plt.savefig('../plots/speedupFarmHeavy.eps', format='eps')
 plt.close()
 
 

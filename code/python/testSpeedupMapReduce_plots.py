@@ -46,7 +46,7 @@ speedups = [SLmap[0], SHmap[0], SLreduce[0],SHreduce[0]]
 
 #Plot
 font = {'fontname':'Arial'}
-teamColours = ['navajowhite','orange','plum','mediumvioletred']
+teamColours = ['navajowhite','orange','lightgreen','green']
 fig, ax = plt.subplots()
 ax = plt.bar(width=0.7, x=["Map with\n light jobs", "Map with\n heavy jobs", "Reduce with\n light jobs", "Reduce with\n heavy jobs"], height=speedups, color=teamColours)
 plt.title("Time Speedup with light jobs vs. heavy jobs", **font)
@@ -61,4 +61,4 @@ for i, v in enumerate(speedups):
     plt.text(xlocs[i] -0.16, v + 0.4, str("{:.2f}".format(v)))
     
 #plt.show()
-plt.savefig('../plots/speedUpMapReduce.eps', format='eps')
+plt.savefig('../plots/speedupMapReduce.eps', format='eps')
