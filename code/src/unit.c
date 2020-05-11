@@ -11043,7 +11043,7 @@ int nTestFunction9 = sizeof (testFunction9)/sizeof(testFunction9[0]);
     and threads = 16]
 
     Parallel and Sequential
-    Array Size 1M, workerLight and thread count 1-128]
+    Array Size 5M, workerLight and thread count 1-128]
 */
 
 TESTFUNCTION testFunction10[] = {

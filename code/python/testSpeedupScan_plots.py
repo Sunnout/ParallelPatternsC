@@ -18,8 +18,7 @@ s = [seq_data_8['time'].values[0],seq_data_8['time'].values[0],seq_data_8['time'
 font = {'fontname':'Arial'}
 plt.figure(1, figsize=(12,8))
 plt.plot(par_data_8['threads'], s/par_data_8['time'].values, color='darkorange', linewidth=2, marker='D', linestyle='-', label="Parallel Scan with heavy job")
-plt.hlines([1,1,1,1,1,1,1], -10, 130, colors='green', linestyles='solid', label='Sequential Scan with heavy job')
-plt.axis([-10, 130, 0, 1.25])
+plt.axis([None, None, None, 15])
 plt.xlabel("Number of Threads \n \n Input Size: 2k", **font)
 plt.ylabel("Time Speedup", **font)
 plt.title("Time Speedup of Parallel Scan with heavy jobs", **font)
