@@ -10905,12 +10905,8 @@ int nTestFunction2 = sizeof (testFunction2)/sizeof(testFunction2[0]);
 //=======================================================
 
 /* 
-    bash3 [Parallel Only
-    Array sizes (524288 524289 750000 1048576 1048577 1500000 2097152 2097153 3000000 4194304)
-    and threads = 16]
-
     bash7 [Parallel and Sequential
-    Array Size 100, workerHeavy and thread count 1-128]
+    Array Size 2k, workerHeavy and thread count 1-128]
 */
 
 TESTFUNCTION testFunction3[] = {
@@ -11036,3 +11032,26 @@ char *testNames9[] = {
 };
 
 int nTestFunction9 = sizeof (testFunction9)/sizeof(testFunction9[0]);
+
+//=======================================================
+// Test 10
+//=======================================================
+
+/* 
+    bash3 [Parallel Only
+    Array sizes (524288 524289 750000 1048576 1048577 1500000 2097152 2097153 3000000 4194304)
+    and threads = 16]
+
+    Parallel and Sequential
+    Array Size 1M, workerLight and thread count 1-128]
+*/
+
+TESTFUNCTION testFunction10[] = {
+    testScanLightWorker,
+};
+
+char *testNames10[] = {
+    "testScanLightWorker",
+};
+
+int nTestFunction10 = sizeof (testFunction10)/sizeof(testFunction10[0]);
