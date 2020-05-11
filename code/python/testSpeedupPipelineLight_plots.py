@@ -37,6 +37,6 @@ plt.xlabel("Number of Threads \n \n Input Size: 50k", **font)
 plt.ylabel("Time Speedup", **font)
 plt.title("Time Speedup of Pipeline with light jobs and a large number of stations", **font)
 plt.legend()
-plt.savefig('../plots/speedupPipelineLight.eps', format='eps')
+plt.savefig('../plots/speedupPipelineLight.pdf', format='pdf')
 plt.close()
 

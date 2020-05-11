@@ -61,4 +61,4 @@ for i, v in enumerate(speedups):
     plt.text(xlocs[i] -0.16, v + 0.4, str("{:.2f}".format(v)))
     
 #plt.show()
-plt.savefig('../plots/speedupMapReduce.eps', format='eps')
+plt.savefig('../plots/speedupMapReduce.pdf', format='pdf')

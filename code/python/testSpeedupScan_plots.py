@@ -24,6 +24,6 @@ plt.xlabel("Number of Threads \n \n Input Size: 2k", **font)
 plt.ylabel("Time Speedup", **font)
 plt.title("Time Speedup of Parallel Scan with heavy jobs", **font)
 plt.legend()
-plt.savefig('../plots/speedupScan.eps', format='eps')
+plt.savefig('../plots/speedupScan.pdf', format='pdf')
 plt.close()
 

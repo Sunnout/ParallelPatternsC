@@ -1,5 +1,5 @@
 """
-@authors: Ema Vieira - 50095, André Atalaia - 51910
+@authors: Ema Vieira - 50095, Andre Atalaia - 51910
 
 """
 
@@ -39,5 +39,5 @@ plt.xlabel("Number of Threads \n \n Input Size: 500", **font)
 plt.ylabel("Time Speedup", **font)
 plt.title("Time Speedup of Pipeline with heavy jobs", **font)
 plt.legend()
-plt.savefig('../plots/speedupPipelineHeavy.eps', format='eps')
+plt.savefig('../plots/speedupPipelineHeavy.pdf', format='pdf')
 plt.close()

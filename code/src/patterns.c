@@ -125,25 +125,16 @@ void createTreeNode (TreeNode * tree, int current, int min, int max, void *src, 
         int left = 2*current+1;
         int right = 2*current+2;
 
-        //Create left child
-        if(split-min <= 20000) {
+        #pragma omp task untied
+        {
             createTreeNode(tree, left, min, split, src, nJob, nPow, sizeJob, worker);
-        } else {
-            #pragma omp task untied
-            {
-                createTreeNode(tree, left, min, split, src, nJob, nPow, sizeJob, worker);
-            }
+        }
+
+        #pragma omp task untied
+        {
+            createTreeNode(tree, right, split, max, src, nJob, nPow, sizeJob, worker);
         }
         
-        //Create right child
-        if(max-split <= 20000) {
-            createTreeNode(tree, right, split, max, src, nJob, nPow, sizeJob, worker);
-        } else {
-            #pragma omp task untied
-            {
-                createTreeNode(tree, right, split, max, src, nJob, nPow, sizeJob, worker);
-            }
-        }
         #pragma omp taskwait
 
         tree[current].sum = malloc(sizeJob);
@@ -171,20 +162,14 @@ void updateTreeNode (TreeNode * tree, int current, size_t nJob, int splitSize, s
     if(left < nJob-1 || right < nJob-1){
         int split = splitSize/2;
 
-        if(split <= 20000) {
-            #pragma omp task untied
-            {
-                updateTreeNode(tree, left, nJob, split, sizeJob, src, dest, worker);
-            }
-            #pragma omp task untied
-            {
-                updateTreeNode(tree, right, nJob, split, sizeJob, src, dest, worker);
-            }
-        } else {
-                updateTreeNode(tree, left, nJob, split, sizeJob, src, dest, worker);
-                updateTreeNode(tree, right, nJob, split, sizeJob, src, dest, worker);
+        #pragma omp task untied
+        {
+            updateTreeNode(tree, left, nJob, split, sizeJob, src, dest, worker);
         }
-        
+        #pragma omp task untied
+        {
+            updateTreeNode(tree, right, nJob, split, sizeJob, src, dest, worker);
+        }
     }
 }
 

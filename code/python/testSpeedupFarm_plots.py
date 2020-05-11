@@ -45,7 +45,7 @@ plt.ylabel("Time Speedup", **font)
 plt.title("Time Speedup of Farm with heavy jobs", **font)
 plt.legend()
 #plt.show()
-plt.savefig('../plots/speedupFarmHeavy.eps', format='eps')
+plt.savefig('../plots/speedupFarmHeavy.pdf', format='pdf')
 plt.close()
 
 
