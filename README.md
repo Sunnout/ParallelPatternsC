@@ -20,7 +20,7 @@ make
 * Testing with validation: `./main -v [inputSize]`
 * Testing with sequential version: `./main -s -t [testNumber] [inputSize]`
 
-There are several test sets, ranging from **0-6** and **8-9**.
+There are several test sets, ranging from **0-6** and **8-10**.
 
 To vary the thread number just set the OMP variable like so:
 * Testing with threads: `OMP_NUM_THREADS=[numberOfThreads] ./main -t [testNumber] [inputSize]`
@@ -34,7 +34,7 @@ To run tests using our bash scripts do:
 * Bash with parallel version: `./test0_par.sh`
 
 There are several bash scripts:
-* **test0-2** and **4-9** have **sequential and parallel** versions;
+* **test0-2** and **4-10** have **sequential and parallel** versions;
 * **test3** only has a **parallel** version.
 
 ### How do I run python scripts? ###
