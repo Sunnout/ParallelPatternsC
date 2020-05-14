@@ -1,0 +1,15 @@
+Threads, Array Size, Test, Time
+2, 200000000, testGatherMediumFilter,   16.638
+2, 200000000, testScatterMediumFilter,   19.461
+4, 200000000, testGatherMediumFilter,   11.180
+4, 200000000, testScatterMediumFilter,   15.750
+8, 200000000, testGatherMediumFilter,    7.398
+8, 200000000, testScatterMediumFilter,   13.403
+16, 200000000, testGatherMediumFilter,    5.853
+16, 200000000, testScatterMediumFilter,   12.741
+32, 200000000, testGatherMediumFilter,    5.156
+32, 200000000, testScatterMediumFilter,   12.566
+64, 200000000, testGatherMediumFilter,    4.941
+64, 200000000, testScatterMediumFilter,   12.780
+128, 200000000, testGatherMediumFilter,    4.968
+128, 200000000, testScatterMediumFilter,   12.646

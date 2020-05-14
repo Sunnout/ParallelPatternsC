@@ -1,0 +1,5 @@
+Threads, Array Size, Test, Time
+1, 5000000, testScanLightWorker,    8.409
+2, 5000000, testScanLightWorker,   23.277
+4, 5000000, testScanLightWorker,   31.709
+8, 5000000, testScanLightWorker,   55.772
