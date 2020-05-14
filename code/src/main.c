@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
     argv += optind;
     
     if (argc != 1) {
-        printf("Usage: ./example N\n");
+        printf("Usage: ./main -v -t T N\n");
         return -1;
     }
 
