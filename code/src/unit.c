@@ -223,7 +223,7 @@ void validateReduce (void *src, size_t n, size_t size) {
     reduce (dest, src, n, size, workerAdd);
     
     if (seq_dest[0] != dest[0]){
-        printf("Precision ERROR in REDUCE %d with values: %lf != %lf", 0, seq_dest[0], dest[0]);
+        printf("ERROR in REDUCE %d with values: %lf != %lf", 0, seq_dest[0], dest[0]);
     }
     
     free (dest);
@@ -242,7 +242,7 @@ void validateScan (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < n  && !error;i++){
         if ( seq_dest[i] != dest[i]){
             error = 1;
-            printf("Precision ERROR in SCAN %d with values: %lf != %lf", i, seq_dest[i], dest[i]);
+            printf("ERROR in SCAN %d with values: %lf != %lf", i, seq_dest[i], dest[i]);
         }
     }
 
@@ -319,7 +319,7 @@ void validateScatter (void *src, size_t n, size_t size) {
     for(int i = 0 ;  i < nDest  && !error;i++){
         if (seq_dest[i] != dest[i]){
             error = 1;
-            printf("Non deterministic ERROR in SCATTER %d", i);
+            printf("ERROR in SCATTER %d", i);
         }
     }
 

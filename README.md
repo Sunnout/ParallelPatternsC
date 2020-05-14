@@ -5,6 +5,13 @@
 
 * This is the base code for the cp2019-20_project_50095_51910 for CP 2019-20
 
+### Note to professor ###
+Also note there is two implementations of scatter, you should add the following macros to unit.c and pattern.h:
+* #define scatter(dest, src, n, size, filter) scatterAtomic(dest, src, n, size, filter)
+* #define scatter(dest, src, n, size, filter) scatterNotAtomic(dest, src, n, size, filter)
+
+Then comment which one you dont desire to use.
+
 ### How do I get set up? ###
 
 ```
@@ -25,11 +32,6 @@ There are several test sets, ranging from **0-6** and **8-10**.
 To vary the thread number just set the OMP variable like so:
 * Testing with threads: `OMP_NUM_THREADS=[numberOfThreads] ./main -t [testNumber] [inputSize]`
 
-Also note there is two implementations of scatter, you should add the following macros to unit.c and pattern.h:
-* #define scatter(dest, src, n, size, filter) scatterAtomic(dest, src, n, size, filter)
-* #define scatter(dest, src, n, size, filter) scatterNotAtomic(dest, src, n, size, filter)
-
-Then comment which one you dont desire to use.
 
 ### How do I run bash scripts? ###
 To run tests using our bash scripts do:
