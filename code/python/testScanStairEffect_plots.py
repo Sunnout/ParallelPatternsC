@@ -1,5 +1,5 @@
 """
-@authors: Ema Vieira - 50095, AndrÃ© Atalaia - 51910
+@authors: Ema Vieira - 50095, Andre Atalaia - 51910
 
 """
 
