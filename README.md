@@ -6,11 +6,12 @@
 * This is the base code for the cp2019-20_project_50095_51910 for CP 2019-20
 
 ### Note to professor ###
-Also note there is two implementations of scatter, you should add the following macros to unit.c and pattern.h:
-* #define scatter(dest, src, n, size, filter) scatterAtomic(dest, src, n, size, filter)
-* #define scatter(dest, src, n, size, filter) scatterNotAtomic(dest, src, n, size, filter)
-
-Then comment which one you dont desire to use.
+There are two implementations of Scatter. You should add the following macros to unit.c and pattern.h:
+```
+#define scatter(dest, src, n, size, filter) scatterAtomic(dest, src, n, size, filter)
+#define scatter(dest, src, n, size, filter) scatterNotAtomic(dest, src, n, size, filter)
+```
+Then comment the one you don't want to test.
 
 ### How do I get set up? ###
 
