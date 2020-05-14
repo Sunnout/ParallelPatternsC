@@ -1,0 +1,2 @@
+Threads, Array Size, Test, Time
+1, 5000000, testScanLightWorker,    0.095

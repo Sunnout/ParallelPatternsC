@@ -1,0 +1,3 @@
+Threads, Array Size, Test, Time
+1, 200000000, testMapLightWorker,    4.263
+1, 200000000, testReduceLightWorker,    2.409

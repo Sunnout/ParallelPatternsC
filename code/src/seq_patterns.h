@@ -1,13 +1,8 @@
-#ifndef __PATTERNS_H
-#define __PATTERNS_H
-
-/*----------------------------------- SCATTER MACRO --------------------------------*/
-
-//#define scatter(dest, src, n, size, filter) scatterAtomic(dest, src, n, size, filter)
-#define scatter(dest, src, n, size, filter) scatterNotAtomic(dest, src, n, size, filter)
+#ifndef __SEQ_PATTERNS_H
+#define __SEQ_PATTERNS_H
 
 
-void map (
+void seq_map (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array
@@ -15,7 +10,7 @@ void map (
   void (*worker)(void *v1, const void *v2) // [ v1 = op (v2) ]
 );
 
-void reduce (
+void seq_reduce (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array
@@ -23,7 +18,7 @@ void reduce (
   void (*worker)(void *v1, const void *v2, const void *v3) // [ v1 = op (v2, v3) ]
 );
 
-void scan (
+void seq_scan (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array
@@ -31,7 +26,7 @@ void scan (
   void (*worker)(void *v1, const void *v2, const void *v3) // [ v1 = op (v2, v3) ]
 );
 
-int pack (
+int seq_pack (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array
@@ -39,7 +34,7 @@ int pack (
   const int *filter     // Filer for pack
 );
 
-void gather (
+void seq_gather (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array
@@ -48,7 +43,7 @@ void gather (
   int nFilter           // # elements in the filter
 );
 
-void scatter (
+void seq_scatter (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array
@@ -56,7 +51,7 @@ void scatter (
   const int *filter     // Filter for scatter
 );
 
-void pipeline (
+void seq_pipeline (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array
@@ -65,7 +60,7 @@ void pipeline (
   size_t nWorkers       // # stages in the pipeline
 );
 
-void farm (
+void seq_farm (
   void *dest,           // Target array
   void *src,            // Source array
   size_t nJob,          // # elements in the source array

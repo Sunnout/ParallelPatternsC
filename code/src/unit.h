@@ -1,12 +1,63 @@
 #ifndef __UNIT_H
 #define __UNIT_H
 
-typedef void (*TESTFUNCTION)(void *, size_t, size_t);
+//TESTING
+typedef void (*TESTFUNCTION)(void *, size_t, size_t,int);
 
-extern TESTFUNCTION testFunction[];
+extern TESTFUNCTION testFunction0[];
+extern char *testNames0[];
+extern int nTestFunction0;
 
-extern char *testNames[];
 
-extern int nTestFunction;
+extern TESTFUNCTION testFunction1[];
+extern char *testNames1[];
+extern int nTestFunction1;
+
+
+extern TESTFUNCTION testFunction2[];
+extern char *testNames2[];
+extern int nTestFunction2;
+
+
+extern TESTFUNCTION testFunction3[];
+extern char *testNames3[];
+extern int nTestFunction3;
+
+
+extern TESTFUNCTION testFunction4[];
+extern char *testNames4[];
+extern int nTestFunction4;
+
+
+extern TESTFUNCTION testFunction5[];
+extern char *testNames5[];
+extern int nTestFunction5;
+
+
+extern TESTFUNCTION testFunction6[];
+extern char *testNames6[];
+extern int nTestFunction6;
+
+extern TESTFUNCTION testFunction8[];
+extern char *testNames8[];
+extern int nTestFunction8;
+
+
+extern TESTFUNCTION testFunction9[];
+extern char *testNames9[];
+extern int nTestFunction9;
+
+
+extern TESTFUNCTION testFunction10[];
+extern char *testNames10[];
+extern int nTestFunction10;
+
+
+//VALIDATING
+typedef void (*VALIDATEFUNCTION)(void *, size_t, size_t);
+
+extern VALIDATEFUNCTION validateFunction[];
+extern char *validateNames[];
+extern int nValidateFunction;
 
 #endif

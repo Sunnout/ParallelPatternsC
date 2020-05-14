@@ -1,0 +1,11 @@
+Threads, Array Size, Test, Time
+16, 524288, testScanLightWorker,    6.530
+16, 524289, testScanLightWorker,   14.170
+16, 750000, testScanLightWorker,   14.709
+16, 1048576, testScanLightWorker,   13.570
+16, 1048577, testScanLightWorker,   30.848
+16, 1500000, testScanLightWorker,   26.531
+16, 2097152, testScanLightWorker,   29.202
+16, 2097153, testScanLightWorker,   62.270
+16, 3000000, testScanLightWorker,   46.667
+16, 4194304, testScanLightWorker,   59.218

@@ -1,0 +1,4 @@
+Threads, Array Size, Test, Time
+1, 1000000, testFarmLightWorkerSmallNumberOfWorkers,    0.016
+1, 1000000, testFarmLightWorkerMediumNumberOfWorkers,    0.012
+1, 1000000, testFarmLightWorkerLargeNumberOfWorkers,    0.012

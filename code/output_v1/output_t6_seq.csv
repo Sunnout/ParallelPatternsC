@@ -1,0 +1,2 @@
+Threads, Array Size, Test, Time
+1, 2000000, testReduceHeavyWorker,    6.127

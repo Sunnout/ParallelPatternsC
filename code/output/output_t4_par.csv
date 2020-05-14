@@ -1,0 +1,16 @@
+Threads, Array Size, Test, Time
+2, 1000000, testFarmLightWorkerSmallNumberOfWorkers,    2.772
+2, 1000000, testFarmLightWorkerMediumNumberOfWorkers,    2.522
+2, 1000000, testFarmLightWorkerLargeNumberOfWorkers,    2.529
+4, 1000000, testFarmLightWorkerSmallNumberOfWorkers,    3.354
+4, 1000000, testFarmLightWorkerMediumNumberOfWorkers,    3.439
+4, 1000000, testFarmLightWorkerLargeNumberOfWorkers,    3.337
+8, 1000000, testFarmLightWorkerSmallNumberOfWorkers,    6.632
+8, 1000000, testFarmLightWorkerMediumNumberOfWorkers,    5.943
+8, 1000000, testFarmLightWorkerLargeNumberOfWorkers,    5.911
+16, 1000000, testFarmLightWorkerSmallNumberOfWorkers,   14.988
+16, 1000000, testFarmLightWorkerMediumNumberOfWorkers,   14.067
+16, 1000000, testFarmLightWorkerLargeNumberOfWorkers,   13.830
+32, 1000000, testFarmLightWorkerSmallNumberOfWorkers,   99.193
+32, 1000000, testFarmLightWorkerMediumNumberOfWorkers,  107.624
+32, 1000000, testFarmLightWorkerLargeNumberOfWorkers,  108.684
