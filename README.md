@@ -1,9 +1,9 @@
 
-# README #
+# Project - Concurrency and Parallelism  #
 
 ### What is this repository for? ###
 
-* This is the base code for the cp2019-20_project_50095_51910 for CP 2019-20
+This project focused on implementing a parallel version of a set of parallel programming patterns: Map, Reduce, Scan, Pack, Gather, Scatter, Pipeline, and Farm. These patterns were implemented by using the C programming language and the OpenMP API. The `doc` folder contains a report of the evaluation of the performance of the parallel implementations under different conditions, such as the completion of heavier jobs and the increase of the quantity of work.
 
 ### Note to professor ###
 There are two implementations of Scatter. You should add the following macros to unit.c and pattern.h:
